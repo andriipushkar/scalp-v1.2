@@ -6,6 +6,7 @@ from loguru import logger
 import pandas as pd
 from binance.enums import *
 import math
+from datetime import datetime
 
 from binance import BinanceSocketManager
 
@@ -57,7 +58,7 @@ class PositionManager:
         # Count only positions with quantity > 0
         return len([pos for pos in self._positions.values() if pos.get('quantity', 0) > 0])
 
-    def set_position(self, symbol: str, side: str, quantity: float, entry_price: float, stop_loss: float, take_profit: float, sl_order_id: int | None = None):
+    def set_position(self, symbol: str, side: str, quantity: float, entry_price: float, stop_loss: float, take_profit: float, sl_order_id: int | None = None, tp_order_id: int | None = None):
         if side not in ["Long", "Short"]:
             raise ValueError("Side must be either 'Long' or 'Short'")
         if quantity > 0:
@@ -67,7 +68,8 @@ class PositionManager:
                 "entry_price": entry_price,
                 "stop_loss": stop_loss,
                 "take_profit": take_profit,
-                "sl_order_id": sl_order_id
+                "sl_order_id": sl_order_id,
+                "tp_order_id": tp_order_id
             }
             logger.info(f"[PositionManager] Opened/Updated position for {symbol}: {self._positions[symbol]}")
             self._save_state()
@@ -87,9 +89,10 @@ class PositionManager:
 class TradeExecutor:
     """Executes trades based on signals and manages position state."""
 
-    def __init__(self, strategy_config: dict, ltf_manager: DataManager, htf_manager: DataManager, 
-                 binance_client: BinanceClient, position_manager: PositionManager, 
-                 risk_per_trade_pct: float, max_active_trades: int, fee_pct: float, orderflow_manager: OrderflowManager | None = None):
+    def __init__(self, strategy_config: dict, ltf_manager: DataManager, htf_manager: DataManager,
+                 binance_client: BinanceClient, position_manager: PositionManager,
+                 risk_per_trade_pct: float, max_active_trades: int, fee_pct: float, leverage: int,
+                 price_precision: int, pending_symbols: set, orderflow_manager: OrderflowManager | None = None):
         self.strategy_config = strategy_config
         self.strategy_id = strategy_config["strategy_id"]
         self.symbol = strategy_config["symbol"]
@@ -99,7 +102,10 @@ class TradeExecutor:
         self.position_manager = position_manager
         self.risk_per_trade_pct = risk_per_trade_pct / 100
         self.max_active_trades = max_active_trades
-        self.fee_pct = fee_pct # Store fee_pct
+        self.fee_pct = fee_pct
+        self.leverage = leverage
+        self.price_precision = price_precision
+        self.pending_symbols = pending_symbols
         self.orderflow_manager = orderflow_manager
         self.strategy = self._initialize_strategy()
 
@@ -112,9 +118,11 @@ class TradeExecutor:
             raise ValueError(f"Unknown strategy: {strategy_name}")
 
     async def execute(self):
+        if self.symbol in self.pending_symbols:
+            logger.trace(f"[{self.strategy_id}] Skipping execution for {self.symbol} as it is pending a transaction.")
+            return
+
         ltf_df = await self.ltf_manager.get_current_klines()
-        # The htf_df is no longer used by OrderFlowScalpingStrategy, but might be expected by other strategies.
-        # For now, we fetch it but it won't be passed to OrderFlowScalpingStrategy.
         htf_df = await self.htf_manager.get_current_klines()
         if ltf_df.empty:
             return
@@ -122,9 +130,8 @@ class TradeExecutor:
         position = self.position_manager.get_position_by_symbol(self.symbol)
 
         if position:
-            await self._check_open_position(position, ltf_df)
+            await self._check_for_reversal(position, ltf_df)
         else:
-            # Check if max active trades reached before checking for signal
             if self.position_manager.get_positions_count() >= self.max_active_trades:
                 logger.warning(f"[{self.strategy_id}] Max active trades reached. Skipping signal check for {self.symbol}.")
                 return
@@ -133,48 +140,40 @@ class TradeExecutor:
             if signal:
                 await self._handle_new_signal(signal, ltf_df)
 
-    async def _check_open_position(self, position: dict, ltf_df: pd.DataFrame):
-                    current_price = await self.binance_client.get_mark_price(symbol)        side = position['side']
-        stop_loss = position['stop_loss']
-        take_profit = position['take_profit']
-
-        # Stop-loss is now handled by the exchange, so we only check for take-profit and reversal.
-        if (side == "Long" and current_price >= take_profit) or (side == "Short" and current_price <= take_profit):
-            await self._close_position(position, reason="Take-Profit")
-            return
-        
-        # Reversal check requires the latest data
+    async def _check_for_reversal(self, position: dict, ltf_df: pd.DataFrame):
         signal = self.strategy.check_signal(ltf_df)
-        if signal and signal['signal_type'] != side:
+        if signal and signal['signal_type'] != position['side']:
+            logger.info(f"[{self.strategy_id}] Reversal signal detected. Closing current position to open a new one.")
             await self._close_position(position, reason="Reversal")
             await self._open_position(signal, ltf_df)
 
     async def _handle_new_signal(self, signal: dict, ltf_df: pd.DataFrame):
         logger.info(f"[{self.strategy_id}] New entry signal: {signal['signal_type']} at {signal['entry_price']}")
-        self._log_signal_to_csv(signal, ltf_df)
         await self._open_position(signal, ltf_df)
 
     async def _open_position(self, signal: dict, ltf_df: pd.DataFrame):
+        if self.symbol in self.pending_symbols:
+            logger.warning(f"[{self.strategy_id}] Attempted to open position for {self.symbol} while it was already pending. Aborting.")
+            return
+
         price = signal['entry_price']
         side = SIDE_BUY if signal["signal_type"] == "Long" else SIDE_SELL
         try:
+            self.pending_symbols.add(self.symbol)
+
             sl_tp = self.strategy.calculate_sl_tp(price, signal["signal_type"], ltf_df, self.fee_pct)
-            if sl_tp is None:  # Trade not profitable after fees
+            if sl_tp is None:
                 logger.warning(f"[{self.strategy_id}] Trade is not profitable after fees or SL/TP could not be calculated. Skipping.")
                 return
-            stop_loss = sl_tp['stop_loss']
-            take_profit = sl_tp['take_profit']
+            stop_loss = round(sl_tp['stop_loss'], self.price_precision)
+            take_profit = round(sl_tp['take_profit'], self.price_precision)
+
             balance = await self.binance_client.get_account_balance()
             open_positions = await self.binance_client.get_open_positions()
-            
+
             used_margin = 0.0
             for pos in open_positions:
-                logger.debug(f"Position data: {pos}")
                 try:
-                    mark_price = await self.binance_client.get_mark_price(pos['symbol'])
-                except Exception as e:
-                    logger.warning(f"Could not fetch mark price for {pos['symbol']}. Falling back to position data. Error: {e}")
-                    try:
                     mark_price = await self.binance_client.get_mark_price(pos['symbol'])
                 except Exception as e:
                     logger.warning(f"Could not fetch mark price for {pos['symbol']}. Falling back to position data. Error: {e}")
@@ -193,10 +192,9 @@ class TradeExecutor:
                 logger.warning("Stop-loss distance is zero. Skipping trade.")
                 return
             quantity = round(risk_amount_usdt / sl_distance, 6)
-            
+
             symbol_info = await self.binance_client.get_symbol_info(self.symbol)
             step_size = float(symbol_info['filters'][1]['stepSize'])
-            
             quantity = math.floor(quantity / step_size) * step_size
             quantity = float(f'{quantity:.8f}')
 
@@ -206,54 +204,100 @@ class TradeExecutor:
 
             logger.info(f"[{self.strategy_id}] Opening {signal['signal_type']} position: {quantity} {self.symbol} at {price}")
             order = await self.binance_client.create_order(self.symbol, side, ORDER_TYPE_MARKET, quantity)
-            logger.success(f"[{self.strategy_id}] Order successful: {order['status']}")
+            logger.success(f"[{self.strategy_id}] Market order successful: {order['status']}")
 
-            await asyncio.sleep(3)
+            try:
+                await asyncio.sleep(2)
+                position_info = await self.binance_client.get_position_for_symbol(self.symbol)
 
-            position_info = await self.binance_client.get_position_for_symbol(self.symbol)
+                if position_info and float(position_info['positionAmt']) != 0:
+                    entry_price = float(position_info['entryPrice'])
+                    position_quantity = abs(float(position_info['positionAmt']))
+                    sl_tp_side = SIDE_SELL if signal["signal_type"] == "Long" else SIDE_BUY
 
-            if position_info and float(position_info['positionAmt']) != 0:
-                entry_price = float(position_info['entryPrice'])
-                position_quantity = abs(float(position_info['positionAmt']))
+                    logger.info(f"[{self.strategy_id}] Preparing to place SL/TP orders. Symbol: {self.symbol}, Side: {sl_tp_side}, Quantity: {position_quantity}, Entry: {entry_price}, SL: {stop_loss}, TP: {take_profit}")
 
-                sl_side = SIDE_SELL if signal["signal_type"] == "Long" else SIDE_BUY
-                sl_order = await self.binance_client.create_stop_market_order(self.symbol, sl_side, position_quantity, stop_loss)
-                logger.info(f"[{self.strategy_id}] Placed stop-loss order: {sl_order['orderId']}")
-                
-                self.position_manager.set_position(self.symbol, signal["signal_type"], position_quantity, entry_price, stop_loss, take_profit, sl_order['orderId'])
-                self._log_trade_to_csv(order, "OPEN")
-            else:
-                logger.warning(f"[{self.strategy_id}] Position for {self.symbol} not found or quantity is zero after creating order.")
+                    sl_order = await self.binance_client.create_stop_market_order(self.symbol, sl_tp_side, position_quantity, stop_loss)
+                    logger.info(f"[{self.strategy_id}] Placed stop-loss order: {sl_order['orderId']}")
+
+                    tp_order = await self.binance_client.create_take_profit_market_order(self.symbol, sl_tp_side, position_quantity, take_profit)
+                    logger.info(f"[{self.strategy_id}] Placed take-profit order: {tp_order['orderId']}")
+
+                    self.position_manager.set_position(self.symbol, signal["signal_type"], position_quantity, entry_price, stop_loss, take_profit, sl_order['orderId'], tp_order['orderId'])
+                    self._log_trade_to_csv(order, "OPEN", stop_loss, take_profit, entry_price=entry_price, stop_order_id=sl_order.get('orderId'), stop_status=sl_order.get('status'))
+                else:
+                    logger.warning(f"[{self.strategy_id}] Position for {self.symbol} not found or quantity is zero after creating order. Initiating rollback.")
+                    await self._rollback_position(side, quantity)
+
+            except Exception as e:
+                logger.error(f"[{self.strategy_id}] Failed to place SL/TP orders or update state for {self.symbol}. Initiating rollback. Error: {e}")
+                await self._rollback_position(side, quantity)
+
         except Exception as e:
             logger.error(f"[{self.strategy_id}] Failed to open position: {e}")
+        finally:
+            if self.symbol in self.pending_symbols:
+                self.pending_symbols.remove(self.symbol)
+
+    async def _rollback_position(self, side: str, quantity: float):
+        """Closes a position immediately after opening due to an error in post-opening logic."""
+        logger.critical(f"[{self.strategy_id}] CRITICAL: Rolling back position for {self.symbol} due to failure in post-opening logic.")
+        close_side = SIDE_SELL if side == SIDE_BUY else SIDE_BUY
+        try:
+            await self.binance_client.create_order(self.symbol, close_side, ORDER_TYPE_MARKET, quantity)
+            logger.success(f"[{self.strategy_id}] Rollback successful. Position for {self.symbol} should be closed.")
+        except Exception as e:
+            logger.error(f"[{self.strategy_id}] CRITICAL: FAILED TO ROLLBACK POSITION for {self.symbol}. Manual intervention required. Error: {e}")
 
     async def _close_position(self, position: dict, reason: str):
         quantity = position["quantity"]
         side = SIDE_SELL if position["side"] == "Long" else SIDE_BUY
         sl_order_id = position.get("sl_order_id")
+        tp_order_id = position.get("tp_order_id")
 
         try:
-            if sl_order_id:
-                try:
-                    await self.binance_client.cancel_order(self.symbol, sl_order_id)
-                    logger.info(f"[{self.strategy_id}] Canceled stop-loss order: {sl_order_id}")
-                except Exception as e:
-                    logger.error(f"[{self.strategy_id}] Failed to cancel stop-loss order {sl_order_id}: {e}")
-            
+            for order_id in [sl_order_id, tp_order_id]:
+                if order_id:
+                    try:
+                        await self.binance_client.cancel_order(self.symbol, order_id)
+                        logger.info(f"[{self.strategy_id}] Canceled order: {order_id}")
+                    except Exception as e:
+                        if "Order does not exist" not in str(e):
+                            logger.error(f"[{self.strategy_id}] Failed to cancel order {order_id}: {e}")
+
             logger.info(f"[{self.strategy_id}] Closing {position['side']} position due to {reason}: {quantity} {self.symbol}")
             order = await self.binance_client.create_order(self.symbol, side, ORDER_TYPE_MARKET, quantity)
             logger.success(f"[{self.strategy_id}] Close order successful: {order['status']}")
             closed_pos = self.position_manager.close_position(self.symbol)
             if closed_pos:
-                self._log_trade_to_csv(order, f"CLOSE_{reason.upper()}", closed_pos['entry_price'])
+                entry_price = closed_pos.get('entry_price')
+                self._log_trade_to_csv(order, f"CLOSE_{reason.upper()}", closed_pos['stop_loss'], closed_pos['take_profit'], entry_price=entry_price, stop_order_id=closed_pos.get('sl_order_id'))
         except Exception as e:
             logger.error(f"[{self.strategy_id}] Failed to close position: {e}")
 
-    def _log_signal_to_csv(self, signal: dict, df: pd.DataFrame):
-        pass
+    def _log_trade_to_csv(self, order: dict, trade_type: str, stop_loss: float, take_profit: float, entry_price: float | None = None, stop_order_id: int | None = None, stop_status: str | None = None):
+        file_exists = os.path.isfile(TRADE_HISTORY_CSV)
+        with open(TRADE_HISTORY_CSV, 'a', newline='') as f:
+            writer = csv.writer(f)
+            if not file_exists or os.path.getsize(TRADE_HISTORY_CSV) == 0:
+                writer.writerow(["timestamp", "symbol", "side", "quantity", "price", "stop_loss", "take_profit", "leverage", "trade_type", "order_id", "stop_order_id", "stop_status"])
 
-    def _log_trade_to_csv(self, order: dict, trade_type: str, entry_price: float | None = None):
-        pass
+            price = entry_price if entry_price is not None else order.get('avgPrice', order.get('price'))
+
+            writer.writerow([
+                datetime.utcnow().isoformat(),
+                self.symbol,
+                order.get('side'),
+                order.get('origQty'),
+                price,
+                stop_loss,
+                take_profit,
+                self.leverage,
+                trade_type,
+                order.get('orderId'),
+                stop_order_id,
+                stop_status
+            ])
 
 
 class BotOrchestrator:
@@ -268,6 +312,7 @@ class BotOrchestrator:
         self.orderflow_managers: dict[str, OrderflowManager] = {}
         self.trade_executors: list[TradeExecutor] = []
         self.bsm: BinanceSocketManager | None = None
+        self.pending_symbols = set()
 
     def _load_json(self, path: str) -> dict:
         with open(path, 'r', encoding='utf-8') as f:
@@ -297,15 +342,13 @@ class BotOrchestrator:
                 if isinstance(msg, dict) and 'stream' in msg and 'data' in msg:
                     stream = msg['stream']
                     data = msg['data']
-                    
-                    # Kline stream
+
                     if '@kline_' in stream:
                         symbol, interval = stream.split('@kline_')
                         pair_key = f"{symbol.upper()}-{interval}"
                         if pair_key in self.data_managers:
                             await self.data_managers[pair_key].process_kline_message(data)
-                    
-                    # Aggregate trade stream
+
                     elif '@aggTrade' in stream:
                         symbol = stream.split('@')[0].upper()
                         if symbol in self.orderflow_managers:
@@ -317,16 +360,14 @@ class BotOrchestrator:
         logger.info("Starting BotOrchestrator...")
         async with BinanceClient() as client:
             self.binance_client = client
-            
+
             self.bsm = BinanceSocketManager(self.binance_client.get_async_client(), max_queue_size=5000)
             valid_symbols = await self._setup_trading_environment()
 
             risk_pct = self.trading_config['risk_per_trade_pct']
             max_trades = self.trading_config['max_active_trades']
             fee_pct = self.trading_config['fee_pct']
-
-            logger.debug(f"[BotOrchestrator] Loaded trading_config: {self.trading_config}")
-            logger.debug(f"[BotOrchestrator] fee_pct: {fee_pct}")
+            leverage = self.trading_config['leverage']
 
             streams = []
             for config in self.strategies_configs:
@@ -351,7 +392,7 @@ class BotOrchestrator:
                     lookback = 100
                     if "parameters" in config and "climax_bar_lookback" in config["parameters"]:
                         lookback = config["parameters"]["climax_bar_lookback"] + 5
-                    
+
                     dm = DataManager(self.binance_client, orderflow_manager, symbol, interval, lookback)
                     await dm.load_historical_data()
                     self.data_managers[pair_key] = dm
@@ -360,8 +401,12 @@ class BotOrchestrator:
 
                 data_manager = self.data_managers[pair_key]
 
-                executor = TradeExecutor(config, data_manager, data_manager, self.binance_client, 
-                                         self.position_manager, risk_pct, max_trades, fee_pct, orderflow_manager)
+                symbol_info = await self.binance_client.get_symbol_info(symbol)
+                price_precision = int(symbol_info['pricePrecision'])
+
+                executor = TradeExecutor(config, data_manager, data_manager, self.binance_client,
+                                         self.position_manager, risk_pct, max_trades, fee_pct, leverage,
+                                         price_precision, self.pending_symbols, orderflow_manager)
                 self.trade_executors.append(executor)
                 logger.info(f"TradeExecutor initialized for {config['strategy_id']}")
 
@@ -369,7 +414,6 @@ class BotOrchestrator:
                 logger.warning("No enabled strategies found. Bot will not run.")
                 return
 
-            # Start the single websocket listener
             asyncio.create_task(self._start_websocket_listener(streams))
 
             logger.info("BotOrchestrator started. Entering main execution loop...")
