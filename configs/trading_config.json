@@ -1,0 +1,7 @@
+{
+  "risk_per_trade_pct": 0.05,
+  "fee_pct": 0.0004,
+  "leverage": 10,
+  "margin_type": "ISOLATED",
+  "max_active_trades": 5
+}
