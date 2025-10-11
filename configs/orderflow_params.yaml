@@ -7,6 +7,8 @@ default:
   climax_bar_lookback: 10
   # Множник ATR для розрахунку Take-Profit
   tp_atr_multiplier: 1.5
+  # Множник ATR для розрахунку Stop-Loss
+  sl_atr_multiplier: 1.5
   # Період SMA для індикатора CVD
   cvd_sma_period: 5
 
@@ -18,28 +20,28 @@ default:
         is_high_volume: true
         is_small_body: true
         is_new_high: true
-        cvd_bearish_divergence: false
+        cvd_bearish_divergence: true
     exhaustion_long:
       enabled: true
       conditions:
         is_high_volume: true
         is_small_body: true
         is_new_low: true
-        cvd_bullish_divergence: false
+        cvd_bullish_divergence: true
     absorption_short:
       enabled: true
       conditions:
         is_at_high: true
         is_high_volume: true
         is_rejection_from_high: true
-        cvd_bearish_divergence: false
+        cvd_bearish_divergence: true
     absorption_long:
       enabled: true
       conditions:
         is_at_low: true
         is_high_volume: true
         is_rejection_from_low: true
-        cvd_bullish_divergence: false
+        cvd_bullish_divergence: true
 
 # Приклад індивідуальних налаштувань для конкретної торгової пари
 OrderFlowScalping_LTCUSDT_1m:

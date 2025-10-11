@@ -2,6 +2,7 @@ import asyncio
 import json
 import csv
 import os
+import websockets
 from loguru import logger
 import pandas as pd
 from binance.enums import *
@@ -334,27 +335,131 @@ class BotOrchestrator:
         logger.info("Trading environment setup complete.")
         return valid_symbols
 
-    async def _start_websocket_listener(self, streams: list[str]):
+    async def _start_market_data_listener(self, streams: list[str]):
         logger.info(f"Starting multiplexed websocket listener for streams: {streams}")
         async with self.bsm.multiplex_socket(streams) as socket:
             while True:
-                msg = await socket.recv()
-                if isinstance(msg, dict) and 'stream' in msg and 'data' in msg:
-                    stream = msg['stream']
-                    data = msg['data']
+                try:
+                    msg = await socket.recv()
+                    if isinstance(msg, dict) and 'stream' in msg and 'data' in msg:
+                        stream = msg['stream']
+                        data = msg['data']
 
-                    if '@kline_' in stream:
-                        symbol, interval = stream.split('@kline_')
-                        pair_key = f"{symbol.upper()}-{interval}"
-                        if pair_key in self.data_managers:
-                            await self.data_managers[pair_key].process_kline_message(data)
+                        if '@kline_' in stream:
+                            symbol, interval = stream.split('@kline_')
+                            pair_key = f"{symbol.upper()}-{interval}"
+                            if pair_key in self.data_managers:
+                                await self.data_managers[pair_key].process_kline_message(data)
 
-                    elif '@aggTrade' in stream:
-                        symbol = stream.split('@')[0].upper()
-                        if symbol in self.orderflow_managers:
-                            await self.orderflow_managers[symbol].process_aggtrade_message(data)
-                else:
-                    logger.warning(f"Received unexpected message from websocket: {msg}")
+                        elif '@aggTrade' in stream:
+                            symbol = stream.split('@')[0].upper()
+                            if symbol in self.orderflow_managers:
+                                await self.orderflow_managers[symbol].process_aggtrade_message(data)
+                    else:
+                        logger.warning(f"Received unexpected market data message: {msg}")
+                except Exception as e:
+                    logger.error(f"Error in market data listener: {e}. Reconnecting...")
+                    await asyncio.sleep(5)
+
+    async def _keep_listen_key_alive(self, listen_key: str):
+        while True:
+            try:
+                await asyncio.sleep(30 * 60) # Keep alive every 30 minutes
+                await self.binance_client.client.futures_stream_keepalive(listen_key)
+                logger.info("[UserData] Futures listen key kept alive.")
+            except Exception as e:
+                logger.error(f"[UserData] Failed to keep listen key alive: {e}. It might expire.")
+                break
+
+    async def _start_user_data_listener(self):
+        logger.info("Starting futures user data websocket listener...")
+        try:
+            listen_key_data = await self.binance_client.client.futures_stream_get_listen_key()
+            listen_key = listen_key_data['listenKey']
+            logger.info("[UserData] Got futures listen key.")
+
+            keepalive_task = asyncio.create_task(self._keep_listen_key_alive(listen_key))
+
+            url = f"wss://fstream.binance.com/ws/{listen_key}"
+            
+            async with websockets.connect(url) as socket:
+                logger.info("[UserData] Connected to futures user data stream.")
+                while True:
+                    msg_raw = await socket.recv()
+                    msg = json.loads(msg_raw)
+                    if isinstance(msg, dict) and 'e' in msg:
+                        await self._handle_user_data_message(msg)
+                    else:
+                        logger.warning(f"[UserData] Received unexpected message: {msg}")
+
+        except Exception as e:
+            logger.error(f"Error in user data listener: {e}. Will attempt to reconnect...")
+            await asyncio.sleep(5)
+            asyncio.create_task(self._start_user_data_listener())
+
+    async def _handle_user_data_message(self, msg: dict):
+        if msg.get('e') == 'ORDER_TRADE_UPDATE':
+            # --- TEMPORARY DEBUG LOG ---
+            logger.critical(f"[UserData] RAW_ORDER_UPDATE: {msg}")
+            # -------------------------
+            order_data = msg.get('o', {})
+            symbol = order_data.get('s')
+            status = order_data.get('X')
+            order_id = order_data.get('i')
+
+            if status == 'EXPIRED' and order_data.get('ot') in ['STOP_MARKET', 'TAKE_PROFIT_MARKET']:
+                logger.info(f"[UserData] Received EXPIRED status for trigger order {order_id} on {symbol}. Assuming it was executed.")
+
+                position = self.position_manager.get_position_by_symbol(symbol)
+                if not position:
+                    logger.info(f"[UserData] Position for {symbol} not found or already closed. Ignoring FILLED event.")
+                    return
+
+                sl_order_id = position.get('sl_order_id')
+                tp_order_id = position.get('tp_order_id')
+
+                other_order_to_cancel = None
+                reason = ""
+                if order_id == sl_order_id:
+                    other_order_to_cancel = tp_order_id
+                    reason = "STOP_LOSS"
+                    logger.info(f"[UserData] Stop-loss filled for {symbol}. Canceling take-profit order {other_order_to_cancel}.")
+                elif order_id == tp_order_id:
+                    other_order_to_cancel = sl_order_id
+                    reason = "TAKE_PROFIT"
+                    logger.info(f"[UserData] Take-profit filled for {symbol}. Canceling stop-loss order {other_order_to_cancel}.")
+
+                if other_order_to_cancel:
+                    try:
+                        await self.binance_client.cancel_order(symbol, other_order_to_cancel)
+                        logger.success(f"[UserData] Successfully canceled order {other_order_to_cancel} for {symbol}.")
+                    except Exception as e:
+                        if "Order does not exist" not in str(e):
+                            logger.error(f"[UserData] Failed to cancel order {other_order_to_cancel} for {symbol}: {e}")
+
+                closed_pos = self.position_manager.close_position(symbol)
+                if closed_pos:
+                    executor = next((exc for exc in self.trade_executors if exc.symbol == symbol), None)
+                    if executor:
+                        log_order = {
+                            'side': order_data.get('S'), 'origQty': order_data.get('q'),
+                            'avgPrice': order_data.get('ap'), 'price': order_data.get('p'),
+                            'orderId': order_id
+                        }
+                        executor._log_trade_to_csv(
+                            log_order, f"CLOSE_{reason}", closed_pos['stop_loss'],
+                            closed_pos['take_profit'], entry_price=closed_pos.get('entry_price'),
+                            stop_order_id=closed_pos.get('sl_order_id')
+                        )
+                    else:
+                        logger.error(f"[UserData] Could not find TradeExecutor for {symbol} to log trade closure.")
+
+    async def _main_loop(self):
+        logger.info("BotOrchestrator started. Entering main execution loop...")
+        while True:
+            tasks = [executor.execute() for executor in self.trade_executors]
+            await asyncio.gather(*tasks)
+            await asyncio.sleep(1)
 
     async def start(self):
         logger.info("Starting BotOrchestrator...")
@@ -414,10 +519,8 @@ class BotOrchestrator:
                 logger.warning("No enabled strategies found. Bot will not run.")
                 return
 
-            asyncio.create_task(self._start_websocket_listener(streams))
+            market_data_task = asyncio.create_task(self._start_market_data_listener(streams))
+            user_data_task = asyncio.create_task(self._start_user_data_listener())
+            main_loop_task = asyncio.create_task(self._main_loop())
 
-            logger.info("BotOrchestrator started. Entering main execution loop...")
-            while True:
-                tasks = [executor.execute() for executor in self.trade_executors]
-                await asyncio.gather(*tasks)
-                await asyncio.sleep(1)
+            await asyncio.gather(market_data_task, user_data_task, main_loop_task)

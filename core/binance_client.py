@@ -108,6 +108,23 @@ class BinanceClient:
             print(f"Error creating stop market order: {e}")
             raise
 
+    async def create_take_profit_market_order(self, symbol: str, side: str, quantity: float, stop_price: float):
+        if not self.client:
+            raise RuntimeError("BinanceClient is not initialized.")
+        try:
+            order = await self.client.futures_create_order(
+                symbol=symbol,
+                side=side,
+                type=FUTURE_ORDER_TYPE_TAKE_PROFIT_MARKET,
+                quantity=quantity,
+                stopPrice=stop_price,
+                closePosition=False
+            )
+            return order
+        except Exception as e:
+            print(f"Error creating take profit market order: {e}")
+            raise
+
     async def cancel_order(self, symbol: str, order_id: int):
         if not self.client:
             raise RuntimeError("BinanceClient is not initialized.")
@@ -226,7 +243,7 @@ class BinanceClient:
         all_trades = []
         while True:
             try:
-                trades = await self.client.get_aggregate_trades(
+                trades = await self.client.futures_aggregate_trades(
                     symbol=symbol, 
                     startTime=start_ts, 
                     endTime=end_ts,

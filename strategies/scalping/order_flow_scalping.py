@@ -55,6 +55,7 @@ class OrderFlowScalpingStrategy(BaseStrategy):
         # Exhaustion Short
         exhaustion_short_setup = self.setups.get("exhaustion_short", {})
         if exhaustion_short_setup.get("enabled", False):
+            logger.debug(f"[{self.strategy_id}] Checking for exhaustion_short signal.")
             signal = self._check_exhaustion_signal(df, current_cvd, "short", exhaustion_short_setup.get("conditions", {}))
             if signal:
                 return signal
@@ -62,6 +63,7 @@ class OrderFlowScalpingStrategy(BaseStrategy):
         # Exhaustion Long
         exhaustion_long_setup = self.setups.get("exhaustion_long", {})
         if exhaustion_long_setup.get("enabled", False):
+            logger.debug(f"[{self.strategy_id}] Checking for exhaustion_long signal.")
             signal = self._check_exhaustion_signal(df, current_cvd, "long", exhaustion_long_setup.get("conditions", {}))
             if signal:
                 return signal
@@ -69,6 +71,7 @@ class OrderFlowScalpingStrategy(BaseStrategy):
         # Absorption Short
         absorption_short_setup = self.setups.get("absorption_short", {})
         if absorption_short_setup.get("enabled", False):
+            logger.debug(f"[{self.strategy_id}] Checking for absorption_short signal.")
             signal = self._check_absorption_signal(df, current_cvd, "short", absorption_short_setup.get("conditions", {}))
             if signal:
                 return signal
@@ -76,6 +79,7 @@ class OrderFlowScalpingStrategy(BaseStrategy):
         # Absorption Long
         absorption_long_setup = self.setups.get("absorption_long", {})
         if absorption_long_setup.get("enabled", False):
+            logger.debug(f"[{self.strategy_id}] Checking for absorption_long signal.")
             signal = self._check_absorption_signal(df, current_cvd, "long", absorption_long_setup.get("conditions", {}))
             if signal:
                 return signal
@@ -98,7 +102,6 @@ class OrderFlowScalpingStrategy(BaseStrategy):
         is_downtrend = previous_candle['close'] < previous_candle['open']
         is_new_high = latest_candle['high'] >= lookback_df['high'].max()
         is_new_low = latest_candle['low'] <= lookback_df['low'].min()
-        
         cvd_sma = df['cvd'].rolling(window=self.cvd_sma_period).mean().iloc[-1]
         cvd_bearish_divergence = current_cvd < cvd_sma
         cvd_bullish_divergence = current_cvd > cvd_sma
@@ -142,7 +145,6 @@ class OrderFlowScalpingStrategy(BaseStrategy):
         is_rejection_from_low = lower_wick > candle_range * 0.6 if candle_range > 0 else False
         is_at_high = latest_candle['high'] >= lookback_df['high'].max()
         is_at_low = latest_candle['low'] <= lookback_df['low'].min()
-        
         cvd_sma = df['cvd'].rolling(window=self.cvd_sma_period).mean().iloc[-1]
         cvd_bearish_divergence = current_cvd < cvd_sma
         cvd_bullish_divergence = current_cvd > cvd_sma
@@ -178,24 +180,28 @@ class OrderFlowScalpingStrategy(BaseStrategy):
         Calculates Stop-Loss and Take-Profit based on the signal candle, accounting for fees.
         Returns None if the trade is not profitable after fees.
         """
+        logger.info(f"[{self.strategy_id}] Calculating SL/TP for {signal_type} at {entry_price}")
         atr = df['high'] - df['low'] # Simplified ATR for volatility
         avg_atr = atr.iloc[-10:].mean()
 
         # Fees for entry and exit
         total_fees = entry_price * 2 * fee_pct
+        potential_profit = avg_atr * self.tp_atr_multiplier
+        
+        logger.info(f"[{self.strategy_id}] Profitability check: Potential profit (ATR * TP mult) = {potential_profit:.5f}, Total fees = {total_fees:.5f}")
 
         # Check for profitability
-        if (avg_atr * self.tp_atr_multiplier) <= total_fees:
-            logger.warning(f"[{self.strategy_id}] Trade is not profitable after fees. Profit vs Fees: {(avg_atr * self.tp_atr_multiplier):.5f} vs {total_fees:.5f}. Skipping trade.")
+        if potential_profit <= total_fees:
+            logger.warning(f"[{self.strategy_id}] Trade is not profitable after fees. Skipping trade.")
             return None
 
         if signal_type == "Short":
             stop_loss = entry_price + (avg_atr * self.sl_atr_multiplier)
-            take_profit = entry_price - (avg_atr * self.tp_atr_multiplier)
+            take_profit = entry_price - potential_profit
 
         elif signal_type == "Long":
             stop_loss = entry_price - (avg_atr * self.sl_atr_multiplier)
-            take_profit = entry_price + (avg_atr * self.tp_atr_multiplier)
+            take_profit = entry_price + potential_profit
 
         else:
             return None

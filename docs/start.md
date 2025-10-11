@@ -1,2 +1,1 @@
-export GOOGLE_CLOUD_PROJECT=cyclehunterbinance 
-gemini
+scalping-474718 
