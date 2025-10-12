@@ -3,27 +3,35 @@ from loguru import logger
 import sys
 from core.bot_orchestrator import BotOrchestrator
 
-# --- Logger configuration ---
-logger.remove()
-logger.add(sys.stderr, level="DEBUG") # Log to console
+# --- Конфігурація логера ---
+logger.remove() # Видаляємо стандартний обробник
+
+# Додаємо обробник для виводу в консоль з рівнем DEBUG
+logger.add(sys.stderr, level="DEBUG") 
+
+# Додаємо обробник для запису логів у файл
 logger.add(
-    "logs/trader_{time}.log",
-    level="DEBUG",
-    rotation="10 MB",
-    compression="zip",
-    serialize=True # To write logs in JSON format
+    "logs/trader_{time}.log",      # Назва файлу з автоматичною датою та часом
+    level="DEBUG",                 # Рівень логування
+    rotation="10 MB",              # Ротація файлу при досягненні 10 MB
+    compression="zip",             # Стиснення старих лог-файлів
+    serialize=True                 # Запис логів у форматі JSON для зручного парсингу
 )
 
-logger.info("Logger configured. Starting application...")
+logger.info("Логер налаштовано. Запуск додатку...")
 
 async def main():
+    """Головна асинхронна функція, що ініціалізує та запускає бота."""
     orchestrator = BotOrchestrator()
     await orchestrator.start()
 
 if __name__ == "__main__":
     try:
+        # Запускаємо головну асинхронну функцію
         asyncio.run(main())
     except KeyboardInterrupt:
-        logger.info("Application stopped by user.")
+        # Обробка зупинки бота користувачем (Ctrl+C)
+        logger.info("Додаток зупинено користувачем.")
     except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
+        # Обробка будь-яких інших непередбачуваних помилок
+        logger.critical(f"Виникла непередбачувана помилка: {e}")

@@ -1,27 +1,40 @@
 from abc import ABC, abstractmethod
-import pandas as pd
 
 class BaseStrategy(ABC):
-    """Abstract base class for all trading strategies."""
+    """
+    Абстрактний базовий клас для всіх торгових стратегій.
+    Визначає інтерфейс, якому повинна відповідати кожна стратегія.
+    """
 
-    def __init__(self, strategy_id: str, symbol: str, interval: str, parameters: dict):
+    def __init__(self, strategy_id: str, symbol: str):
+        """
+        Ініціалізує базову стратегію.
+
+        :param strategy_id: Унікальний ідентифікатор екземпляру стратегії.
+        :param symbol: Торговий символ (напр., 'BTCUSDT').
+        """
         self.strategy_id = strategy_id
         self.symbol = symbol
-        self.interval = interval
-        self.parameters = parameters
 
     @abstractmethod
-    def check_signal(self, df: pd.DataFrame) -> dict | None:
-        """Checks for a trading signal (Long/Short) based on the provided DataFrame.
+    def check_signal(self, *args, **kwargs) -> dict | None:
+        """
+        Перевіряє наявність торгового сигналу (Long/Short).
+        Приймає довільні аргументи, оскільки різні стратегії можуть
+        вимагати різні дані (напр., свічки, стакан, індикатори).
 
-        Returns a dictionary with signal details or None if no signal.
+        :return: Словник з деталями сигналу або None, якщо сигналу немає.
         """
         pass
 
     @abstractmethod
-    def calculate_sl_tp(self, entry_price: float, signal_type: str, df: pd.DataFrame, fee_pct: float) -> dict:
-        """Calculates Stop-Loss and Take-Profit levels for a given entry price and signal type.
+    def calculate_sl_tp(self, entry_price: float, signal_type: str, **kwargs) -> dict:
+        """
+        Розраховує рівні Stop-Loss та Take-Profit.
+        Приймає довільні аргументи для гнучкості.
 
-        Returns a dictionary with 'stop_loss' and 'take_profit' values.
+        :param entry_price: Ціна входу.
+        :param signal_type: Тип сигналу ('Long' або 'Short').
+        :return: Словник з ключами 'stop_loss' та 'take_profit'.
         """
         pass
