@@ -1,18 +1,11 @@
 [
   {
-    "_comment": "Конфігурація для однієї торгової пари. Бот створить окремий екземпляр для кожного об'єкта в цьому списку.",
     "strategy_id": "LiquidityHunting_BTCUSDT_DOM",
-    "_strategy_id_comment": "Унікальний ідентифікатор стратегії. Перша частина - назва класу стратегії (LiquidityHunting).",
     "enabled": true,
-    "_enabled_comment": "true - бот буде торгувати по цій конфігурації, false - ігнорувати.",
     "symbol": "BTCUSDT",
-    "_symbol_comment": "Торгова пара на Binance Futures.",
     "parameters": {
-      "_comment": "Секція для завантаження параметрів з іншого файлу.",
       "params_file": "configs/liquidity_hunting_params.yaml",
-      "_params_file_comment": "Файл, з якого завантажувати параметри для цієї стратегії.",
-      "params_key": "default",
-      "_params_key_comment": "Ключ у YAML-файлі, що відповідає набору параметрів. 'default' - базові налаштування."
+      "params_key": "default"
     }
   },
   {
@@ -21,8 +14,4624 @@
     "symbol": "ETHUSDT",
     "parameters": {
       "params_file": "configs/liquidity_hunting_params.yaml",
-      "params_key": "LiquidityHunting_ETHUSDT_DOM",
-      "_params_key_comment": "Використання специфічних налаштувань для ETH, перевизначених у файлі параметрів."
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BCHUSDT_DOM",
+    "enabled": true,
+    "symbol": "BCHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XRPUSDT_DOM",
+    "enabled": true,
+    "symbol": "XRPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LTCUSDT_DOM",
+    "enabled": true,
+    "symbol": "LTCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TRXUSDT_DOM",
+    "enabled": true,
+    "symbol": "TRXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ETCUSDT_DOM",
+    "enabled": true,
+    "symbol": "ETCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LINKUSDT_DOM",
+    "enabled": true,
+    "symbol": "LINKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XLMUSDT_DOM",
+    "enabled": true,
+    "symbol": "XLMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ADAUSDT_DOM",
+    "enabled": true,
+    "symbol": "ADAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XMRUSDT_DOM",
+    "enabled": true,
+    "symbol": "XMRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DASHUSDT_DOM",
+    "enabled": true,
+    "symbol": "DASHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZECUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZECUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XTZUSDT_DOM",
+    "enabled": true,
+    "symbol": "XTZUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BNBUSDT_DOM",
+    "enabled": true,
+    "symbol": "BNBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ATOMUSDT_DOM",
+    "enabled": true,
+    "symbol": "ATOMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ONTUSDT_DOM",
+    "enabled": true,
+    "symbol": "ONTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_IOTAUSDT_DOM",
+    "enabled": true,
+    "symbol": "IOTAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BATUSDT_DOM",
+    "enabled": true,
+    "symbol": "BATUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VETUSDT_DOM",
+    "enabled": true,
+    "symbol": "VETUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NEOUSDT_DOM",
+    "enabled": true,
+    "symbol": "NEOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_QTUMUSDT_DOM",
+    "enabled": true,
+    "symbol": "QTUMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_IOSTUSDT_DOM",
+    "enabled": true,
+    "symbol": "IOSTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_THETAUSDT_DOM",
+    "enabled": true,
+    "symbol": "THETAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ALGOUSDT_DOM",
+    "enabled": true,
+    "symbol": "ALGOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZILUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZILUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KNCUSDT_DOM",
+    "enabled": true,
+    "symbol": "KNCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZRXUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZRXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_COMPUSDT_DOM",
+    "enabled": true,
+    "symbol": "COMPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DOGEUSDT_DOM",
+    "enabled": true,
+    "symbol": "DOGEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SXPUSDT_DOM",
+    "enabled": true,
+    "symbol": "SXPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KAVAUSDT_DOM",
+    "enabled": true,
+    "symbol": "KAVAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BANDUSDT_DOM",
+    "enabled": true,
+    "symbol": "BANDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RLCUSDT_DOM",
+    "enabled": true,
+    "symbol": "RLCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SNXUSDT_DOM",
+    "enabled": true,
+    "symbol": "SNXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DOTUSDT_DOM",
+    "enabled": true,
+    "symbol": "DOTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_YFIUSDT_DOM",
+    "enabled": true,
+    "symbol": "YFIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CRVUSDT_DOM",
+    "enabled": true,
+    "symbol": "CRVUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TRBUSDT_DOM",
+    "enabled": true,
+    "symbol": "TRBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RUNEUSDT_DOM",
+    "enabled": true,
+    "symbol": "RUNEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SUSHIUSDT_DOM",
+    "enabled": true,
+    "symbol": "SUSHIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_EGLDUSDT_DOM",
+    "enabled": true,
+    "symbol": "EGLDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SOLUSDT_DOM",
+    "enabled": true,
+    "symbol": "SOLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ICXUSDT_DOM",
+    "enabled": true,
+    "symbol": "ICXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_STORJUSDT_DOM",
+    "enabled": true,
+    "symbol": "STORJUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_UNIUSDT_DOM",
+    "enabled": true,
+    "symbol": "UNIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AVAXUSDT_DOM",
+    "enabled": true,
+    "symbol": "AVAXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ENJUSDT_DOM",
+    "enabled": true,
+    "symbol": "ENJUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FLMUSDT_DOM",
+    "enabled": true,
+    "symbol": "FLMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KSMUSDT_DOM",
+    "enabled": true,
+    "symbol": "KSMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NEARUSDT_DOM",
+    "enabled": true,
+    "symbol": "NEARUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AAVEUSDT_DOM",
+    "enabled": true,
+    "symbol": "AAVEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FILUSDT_DOM",
+    "enabled": true,
+    "symbol": "FILUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RSRUSDT_DOM",
+    "enabled": true,
+    "symbol": "RSRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LRCUSDT_DOM",
+    "enabled": true,
+    "symbol": "LRCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BELUSDT_DOM",
+    "enabled": true,
+    "symbol": "BELUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AXSUSDT_DOM",
+    "enabled": true,
+    "symbol": "AXSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZENUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZENUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SKLUSDT_DOM",
+    "enabled": true,
+    "symbol": "SKLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GRTUSDT_DOM",
+    "enabled": true,
+    "symbol": "GRTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1INCHUSDT_DOM",
+    "enabled": true,
+    "symbol": "1INCHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CHZUSDT_DOM",
+    "enabled": true,
+    "symbol": "CHZUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SANDUSDT_DOM",
+    "enabled": true,
+    "symbol": "SANDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ANKRUSDT_DOM",
+    "enabled": true,
+    "symbol": "ANKRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RVNUSDT_DOM",
+    "enabled": true,
+    "symbol": "RVNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SFPUSDT_DOM",
+    "enabled": true,
+    "symbol": "SFPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_COTIUSDT_DOM",
+    "enabled": true,
+    "symbol": "COTIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CHRUSDT_DOM",
+    "enabled": true,
+    "symbol": "CHRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MANAUSDT_DOM",
+    "enabled": true,
+    "symbol": "MANAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ALICEUSDT_DOM",
+    "enabled": true,
+    "symbol": "ALICEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HBARUSDT_DOM",
+    "enabled": true,
+    "symbol": "HBARUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ONEUSDT_DOM",
+    "enabled": true,
+    "symbol": "ONEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DENTUSDT_DOM",
+    "enabled": true,
+    "symbol": "DENTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CELRUSDT_DOM",
+    "enabled": true,
+    "symbol": "CELRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HOTUSDT_DOM",
+    "enabled": true,
+    "symbol": "HOTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MTLUSDT_DOM",
+    "enabled": true,
+    "symbol": "MTLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_OGNUSDT_DOM",
+    "enabled": true,
+    "symbol": "OGNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NKNUSDT_DOM",
+    "enabled": true,
+    "symbol": "NKNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000SHIBUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000SHIBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GTCUSDT_DOM",
+    "enabled": true,
+    "symbol": "GTCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BTCDOMUSDT_DOM",
+    "enabled": true,
+    "symbol": "BTCDOMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_IOTXUSDT_DOM",
+    "enabled": true,
+    "symbol": "IOTXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_C98USDT_DOM",
+    "enabled": true,
+    "symbol": "C98USDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MASKUSDT_DOM",
+    "enabled": true,
+    "symbol": "MASKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ATAUSDT_DOM",
+    "enabled": true,
+    "symbol": "ATAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DYDXUSDT_DOM",
+    "enabled": true,
+    "symbol": "DYDXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000XECUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000XECUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GALAUSDT_DOM",
+    "enabled": true,
+    "symbol": "GALAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CELOUSDT_DOM",
+    "enabled": true,
+    "symbol": "CELOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ARUSDT_DOM",
+    "enabled": true,
+    "symbol": "ARUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ARPAUSDT_DOM",
+    "enabled": true,
+    "symbol": "ARPAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CTSIUSDT_DOM",
+    "enabled": true,
+    "symbol": "CTSIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LPTUSDT_DOM",
+    "enabled": true,
+    "symbol": "LPTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ENSUSDT_DOM",
+    "enabled": true,
+    "symbol": "ENSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PEOPLEUSDT_DOM",
+    "enabled": true,
+    "symbol": "PEOPLEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ROSEUSDT_DOM",
+    "enabled": true,
+    "symbol": "ROSEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DUSKUSDT_DOM",
+    "enabled": true,
+    "symbol": "DUSKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FLOWUSDT_DOM",
+    "enabled": true,
+    "symbol": "FLOWUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_IMXUSDT_DOM",
+    "enabled": true,
+    "symbol": "IMXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_API3USDT_DOM",
+    "enabled": true,
+    "symbol": "API3USDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GMTUSDT_DOM",
+    "enabled": true,
+    "symbol": "GMTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_APEUSDT_DOM",
+    "enabled": true,
+    "symbol": "APEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_WOOUSDT_DOM",
+    "enabled": true,
+    "symbol": "WOOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_JASMYUSDT_DOM",
+    "enabled": true,
+    "symbol": "JASMYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_OPUSDT_DOM",
+    "enabled": true,
+    "symbol": "OPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_INJUSDT_DOM",
+    "enabled": true,
+    "symbol": "INJUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_STGUSDT_DOM",
+    "enabled": true,
+    "symbol": "STGUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SPELLUSDT_DOM",
+    "enabled": true,
+    "symbol": "SPELLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000LUNCUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000LUNCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LUNA2USDT_DOM",
+    "enabled": true,
+    "symbol": "LUNA2USDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LDOUSDT_DOM",
+    "enabled": true,
+    "symbol": "LDOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ICPUSDT_DOM",
+    "enabled": true,
+    "symbol": "ICPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_APTUSDT_DOM",
+    "enabled": true,
+    "symbol": "APTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_QNTUSDT_DOM",
+    "enabled": true,
+    "symbol": "QNTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FETUSDT_DOM",
+    "enabled": true,
+    "symbol": "FETUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FXSUSDT_DOM",
+    "enabled": true,
+    "symbol": "FXSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HOOKUSDT_DOM",
+    "enabled": true,
+    "symbol": "HOOKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MAGICUSDT_DOM",
+    "enabled": true,
+    "symbol": "MAGICUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TUSDT_DOM",
+    "enabled": true,
+    "symbol": "TUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HIGHUSDT_DOM",
+    "enabled": true,
+    "symbol": "HIGHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MINAUSDT_DOM",
+    "enabled": true,
+    "symbol": "MINAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ASTRUSDT_DOM",
+    "enabled": true,
+    "symbol": "ASTRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PHBUSDT_DOM",
+    "enabled": true,
+    "symbol": "PHBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GMXUSDT_DOM",
+    "enabled": true,
+    "symbol": "GMXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CFXUSDT_DOM",
+    "enabled": true,
+    "symbol": "CFXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_STXUSDT_DOM",
+    "enabled": true,
+    "symbol": "STXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ACHUSDT_DOM",
+    "enabled": true,
+    "symbol": "ACHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SSVUSDT_DOM",
+    "enabled": true,
+    "symbol": "SSVUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CKBUSDT_DOM",
+    "enabled": true,
+    "symbol": "CKBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PERPUSDT_DOM",
+    "enabled": true,
+    "symbol": "PERPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TRUUSDT_DOM",
+    "enabled": true,
+    "symbol": "TRUUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LQTYUSDT_DOM",
+    "enabled": true,
+    "symbol": "LQTYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_USDCUSDT_DOM",
+    "enabled": true,
+    "symbol": "USDCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_IDUSDT_DOM",
+    "enabled": true,
+    "symbol": "IDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ARBUSDT_DOM",
+    "enabled": true,
+    "symbol": "ARBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_JOEUSDT_DOM",
+    "enabled": true,
+    "symbol": "JOEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TLMUSDT_DOM",
+    "enabled": true,
+    "symbol": "TLMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RDNTUSDT_DOM",
+    "enabled": true,
+    "symbol": "RDNTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HFTUSDT_DOM",
+    "enabled": true,
+    "symbol": "HFTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XVSUSDT_DOM",
+    "enabled": true,
+    "symbol": "XVSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BLURUSDT_DOM",
+    "enabled": true,
+    "symbol": "BLURUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_EDUUSDT_DOM",
+    "enabled": true,
+    "symbol": "EDUUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SUIUSDT_DOM",
+    "enabled": true,
+    "symbol": "SUIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000PEPEUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000PEPEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000FLOKIUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000FLOKIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_UMAUSDT_DOM",
+    "enabled": true,
+    "symbol": "UMAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NMRUSDT_DOM",
+    "enabled": true,
+    "symbol": "NMRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MAVUSDT_DOM",
+    "enabled": true,
+    "symbol": "MAVUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XVGUSDT_DOM",
+    "enabled": true,
+    "symbol": "XVGUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_WLDUSDT_DOM",
+    "enabled": true,
+    "symbol": "WLDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PENDLEUSDT_DOM",
+    "enabled": true,
+    "symbol": "PENDLEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ARKMUSDT_DOM",
+    "enabled": true,
+    "symbol": "ARKMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AGLDUSDT_DOM",
+    "enabled": true,
+    "symbol": "AGLDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_YGGUSDT_DOM",
+    "enabled": true,
+    "symbol": "YGGUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DODOXUSDT_DOM",
+    "enabled": true,
+    "symbol": "DODOXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BNTUSDT_DOM",
+    "enabled": true,
+    "symbol": "BNTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_OXTUSDT_DOM",
+    "enabled": true,
+    "symbol": "OXTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SEIUSDT_DOM",
+    "enabled": true,
+    "symbol": "SEIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CYBERUSDT_DOM",
+    "enabled": true,
+    "symbol": "CYBERUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ARKUSDT_DOM",
+    "enabled": true,
+    "symbol": "ARKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BICOUSDT_DOM",
+    "enabled": true,
+    "symbol": "BICOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BIGTIMEUSDT_DOM",
+    "enabled": true,
+    "symbol": "BIGTIMEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_WAXPUSDT_DOM",
+    "enabled": true,
+    "symbol": "WAXPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BSVUSDT_DOM",
+    "enabled": true,
+    "symbol": "BSVUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RIFUSDT_DOM",
+    "enabled": true,
+    "symbol": "RIFUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_POLYXUSDT_DOM",
+    "enabled": true,
+    "symbol": "POLYXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GASUSDT_DOM",
+    "enabled": true,
+    "symbol": "GASUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_POWRUSDT_DOM",
+    "enabled": true,
+    "symbol": "POWRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TIAUSDT_DOM",
+    "enabled": true,
+    "symbol": "TIAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CAKEUSDT_DOM",
+    "enabled": true,
+    "symbol": "CAKEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MEMEUSDT_DOM",
+    "enabled": true,
+    "symbol": "MEMEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TWTUSDT_DOM",
+    "enabled": true,
+    "symbol": "TWTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TOKENUSDT_DOM",
+    "enabled": true,
+    "symbol": "TOKENUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ORDIUSDT_DOM",
+    "enabled": true,
+    "symbol": "ORDIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_STEEMUSDT_DOM",
+    "enabled": true,
+    "symbol": "STEEMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ILVUSDT_DOM",
+    "enabled": true,
+    "symbol": "ILVUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NTRNUSDT_DOM",
+    "enabled": true,
+    "symbol": "NTRNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KASUSDT_DOM",
+    "enabled": true,
+    "symbol": "KASUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BEAMXUSDT_DOM",
+    "enabled": true,
+    "symbol": "BEAMXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000BONKUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000BONKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PYTHUSDT_DOM",
+    "enabled": true,
+    "symbol": "PYTHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SUPERUSDT_DOM",
+    "enabled": true,
+    "symbol": "SUPERUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_USTCUSDT_DOM",
+    "enabled": true,
+    "symbol": "USTCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ONGUSDT_DOM",
+    "enabled": true,
+    "symbol": "ONGUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ETHWUSDT_DOM",
+    "enabled": true,
+    "symbol": "ETHWUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_JTOUSDT_DOM",
+    "enabled": true,
+    "symbol": "JTOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000SATSUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000SATSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AUCTIONUSDT_DOM",
+    "enabled": true,
+    "symbol": "AUCTIONUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000RATSUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000RATSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ACEUSDT_DOM",
+    "enabled": true,
+    "symbol": "ACEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MOVRUSDT_DOM",
+    "enabled": true,
+    "symbol": "MOVRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NFPUSDT_DOM",
+    "enabled": true,
+    "symbol": "NFPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AIUSDT_DOM",
+    "enabled": true,
+    "symbol": "AIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XAIUSDT_DOM",
+    "enabled": true,
+    "symbol": "XAIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_WIFUSDT_DOM",
+    "enabled": true,
+    "symbol": "WIFUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MANTAUSDT_DOM",
+    "enabled": true,
+    "symbol": "MANTAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ONDOUSDT_DOM",
+    "enabled": true,
+    "symbol": "ONDOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LSKUSDT_DOM",
+    "enabled": true,
+    "symbol": "LSKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ALTUSDT_DOM",
+    "enabled": true,
+    "symbol": "ALTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_JUPUSDT_DOM",
+    "enabled": true,
+    "symbol": "JUPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZETAUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZETAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RONINUSDT_DOM",
+    "enabled": true,
+    "symbol": "RONINUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DYMUSDT_DOM",
+    "enabled": true,
+    "symbol": "DYMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_OMUSDT_DOM",
+    "enabled": true,
+    "symbol": "OMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PIXELUSDT_DOM",
+    "enabled": true,
+    "symbol": "PIXELUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_STRKUSDT_DOM",
+    "enabled": true,
+    "symbol": "STRKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GLMUSDT_DOM",
+    "enabled": true,
+    "symbol": "GLMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PORTALUSDT_DOM",
+    "enabled": true,
+    "symbol": "PORTALUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TONUSDT_DOM",
+    "enabled": true,
+    "symbol": "TONUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AXLUSDT_DOM",
+    "enabled": true,
+    "symbol": "AXLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MYROUSDT_DOM",
+    "enabled": true,
+    "symbol": "MYROUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_METISUSDT_DOM",
+    "enabled": true,
+    "symbol": "METISUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AEVOUSDT_DOM",
+    "enabled": true,
+    "symbol": "AEVOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VANRYUSDT_DOM",
+    "enabled": true,
+    "symbol": "VANRYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BOMEUSDT_DOM",
+    "enabled": true,
+    "symbol": "BOMEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ETHFIUSDT_DOM",
+    "enabled": true,
+    "symbol": "ETHFIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ENAUSDT_DOM",
+    "enabled": true,
+    "symbol": "ENAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_WUSDT_DOM",
+    "enabled": true,
+    "symbol": "WUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TNSRUSDT_DOM",
+    "enabled": true,
+    "symbol": "TNSRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SAGAUSDT_DOM",
+    "enabled": true,
+    "symbol": "SAGAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TAOUSDT_DOM",
+    "enabled": true,
+    "symbol": "TAOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_REZUSDT_DOM",
+    "enabled": true,
+    "symbol": "REZUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BBUSDT_DOM",
+    "enabled": true,
+    "symbol": "BBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NOTUSDT_DOM",
+    "enabled": true,
+    "symbol": "NOTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TURBOUSDT_DOM",
+    "enabled": true,
+    "symbol": "TURBOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_IOUSDT_DOM",
+    "enabled": true,
+    "symbol": "IOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZKUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MEWUSDT_DOM",
+    "enabled": true,
+    "symbol": "MEWUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LISTAUSDT_DOM",
+    "enabled": true,
+    "symbol": "LISTAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZROUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZROUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RENDERUSDT_DOM",
+    "enabled": true,
+    "symbol": "RENDERUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BANANAUSDT_DOM",
+    "enabled": true,
+    "symbol": "BANANAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RAREUSDT_DOM",
+    "enabled": true,
+    "symbol": "RAREUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GUSDT_DOM",
+    "enabled": true,
+    "symbol": "GUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SYNUSDT_DOM",
+    "enabled": true,
+    "symbol": "SYNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SYSUSDT_DOM",
+    "enabled": true,
+    "symbol": "SYSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VOXELUSDT_DOM",
+    "enabled": true,
+    "symbol": "VOXELUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BRETTUSDT_DOM",
+    "enabled": true,
+    "symbol": "BRETTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_POPCATUSDT_DOM",
+    "enabled": true,
+    "symbol": "POPCATUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SUNUSDT_DOM",
+    "enabled": true,
+    "symbol": "SUNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DOGSUSDT_DOM",
+    "enabled": true,
+    "symbol": "DOGSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MBOXUSDT_DOM",
+    "enabled": true,
+    "symbol": "MBOXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CHESSUSDT_DOM",
+    "enabled": true,
+    "symbol": "CHESSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FLUXUSDT_DOM",
+    "enabled": true,
+    "symbol": "FLUXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_QUICKUSDT_DOM",
+    "enabled": true,
+    "symbol": "QUICKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RPLUSDT_DOM",
+    "enabled": true,
+    "symbol": "RPLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_POLUSDT_DOM",
+    "enabled": true,
+    "symbol": "POLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1MBABYDOGEUSDT_DOM",
+    "enabled": true,
+    "symbol": "1MBABYDOGEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NEIROUSDT_DOM",
+    "enabled": true,
+    "symbol": "NEIROUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KDAUSDT_DOM",
+    "enabled": true,
+    "symbol": "KDAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FIDAUSDT_DOM",
+    "enabled": true,
+    "symbol": "FIDAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FIOUSDT_DOM",
+    "enabled": true,
+    "symbol": "FIOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CATIUSDT_DOM",
+    "enabled": true,
+    "symbol": "CATIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GHSTUSDT_DOM",
+    "enabled": true,
+    "symbol": "GHSTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HMSTRUSDT_DOM",
+    "enabled": true,
+    "symbol": "HMSTRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_REIUSDT_DOM",
+    "enabled": true,
+    "symbol": "REIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_COSUSDT_DOM",
+    "enabled": true,
+    "symbol": "COSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_EIGENUSDT_DOM",
+    "enabled": true,
+    "symbol": "EIGENUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DIAUSDT_DOM",
+    "enabled": true,
+    "symbol": "DIAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000CATUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000CATUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SCRUSDT_DOM",
+    "enabled": true,
+    "symbol": "SCRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GOATUSDT_DOM",
+    "enabled": true,
+    "symbol": "GOATUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MOODENGUSDT_DOM",
+    "enabled": true,
+    "symbol": "MOODENGUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SAFEUSDT_DOM",
+    "enabled": true,
+    "symbol": "SAFEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SANTOSUSDT_DOM",
+    "enabled": true,
+    "symbol": "SANTOSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PONKEUSDT_DOM",
+    "enabled": true,
+    "symbol": "PONKEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_COWUSDT_DOM",
+    "enabled": true,
+    "symbol": "COWUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CETUSUSDT_DOM",
+    "enabled": true,
+    "symbol": "CETUSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000000MOGUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000000MOGUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GRASSUSDT_DOM",
+    "enabled": true,
+    "symbol": "GRASSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DRIFTUSDT_DOM",
+    "enabled": true,
+    "symbol": "DRIFTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SWELLUSDT_DOM",
+    "enabled": true,
+    "symbol": "SWELLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ACTUSDT_DOM",
+    "enabled": true,
+    "symbol": "ACTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PNUTUSDT_DOM",
+    "enabled": true,
+    "symbol": "PNUTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HIPPOUSDT_DOM",
+    "enabled": true,
+    "symbol": "HIPPOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000XUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000XUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DEGENUSDT_DOM",
+    "enabled": true,
+    "symbol": "DEGENUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BANUSDT_DOM",
+    "enabled": true,
+    "symbol": "BANUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AKTUSDT_DOM",
+    "enabled": true,
+    "symbol": "AKTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SLERFUSDT_DOM",
+    "enabled": true,
+    "symbol": "SLERFUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SCRTUSDT_DOM",
+    "enabled": true,
+    "symbol": "SCRTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000CHEEMSUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000CHEEMSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000WHYUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000WHYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_THEUSDT_DOM",
+    "enabled": true,
+    "symbol": "THEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MORPHOUSDT_DOM",
+    "enabled": true,
+    "symbol": "MORPHOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CHILLGUYUSDT_DOM",
+    "enabled": true,
+    "symbol": "CHILLGUYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KAIAUSDT_DOM",
+    "enabled": true,
+    "symbol": "KAIAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AEROUSDT_DOM",
+    "enabled": true,
+    "symbol": "AEROUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ACXUSDT_DOM",
+    "enabled": true,
+    "symbol": "ACXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ORCAUSDT_DOM",
+    "enabled": true,
+    "symbol": "ORCAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MOVEUSDT_DOM",
+    "enabled": true,
+    "symbol": "MOVEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RAYSOLUSDT_DOM",
+    "enabled": true,
+    "symbol": "RAYSOLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KOMAUSDT_DOM",
+    "enabled": true,
+    "symbol": "KOMAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VIRTUALUSDT_DOM",
+    "enabled": true,
+    "symbol": "VIRTUALUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SPXUSDT_DOM",
+    "enabled": true,
+    "symbol": "SPXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MEUSDT_DOM",
+    "enabled": true,
+    "symbol": "MEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AVAUSDT_DOM",
+    "enabled": true,
+    "symbol": "AVAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DEGOUSDT_DOM",
+    "enabled": true,
+    "symbol": "DEGOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VELODROMEUSDT_DOM",
+    "enabled": true,
+    "symbol": "VELODROMEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MOCAUSDT_DOM",
+    "enabled": true,
+    "symbol": "MOCAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VANAUSDT_DOM",
+    "enabled": true,
+    "symbol": "VANAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PENGUUSDT_DOM",
+    "enabled": true,
+    "symbol": "PENGUUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LUMIAUSDT_DOM",
+    "enabled": true,
+    "symbol": "LUMIAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_USUALUSDT_DOM",
+    "enabled": true,
+    "symbol": "USUALUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AIXBTUSDT_DOM",
+    "enabled": true,
+    "symbol": "AIXBTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FARTCOINUSDT_DOM",
+    "enabled": true,
+    "symbol": "FARTCOINUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KMNOUSDT_DOM",
+    "enabled": true,
+    "symbol": "KMNOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CGPTUSDT_DOM",
+    "enabled": true,
+    "symbol": "CGPTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HIVEUSDT_DOM",
+    "enabled": true,
+    "symbol": "HIVEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DEXEUSDT_DOM",
+    "enabled": true,
+    "symbol": "DEXEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PHAUSDT_DOM",
+    "enabled": true,
+    "symbol": "PHAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DFUSDT_DOM",
+    "enabled": true,
+    "symbol": "DFUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GRIFFAINUSDT_DOM",
+    "enabled": true,
+    "symbol": "GRIFFAINUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AI16ZUSDT_DOM",
+    "enabled": true,
+    "symbol": "AI16ZUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZEREBROUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZEREBROUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BIOUSDT_DOM",
+    "enabled": true,
+    "symbol": "BIOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_COOKIEUSDT_DOM",
+    "enabled": true,
+    "symbol": "COOKIEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ALCHUSDT_DOM",
+    "enabled": true,
+    "symbol": "ALCHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SWARMSUSDT_DOM",
+    "enabled": true,
+    "symbol": "SWARMSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SONICUSDT_DOM",
+    "enabled": true,
+    "symbol": "SONICUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DUSDT_DOM",
+    "enabled": true,
+    "symbol": "DUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PROMUSDT_DOM",
+    "enabled": true,
+    "symbol": "PROMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SUSDT_DOM",
+    "enabled": true,
+    "symbol": "SUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SOLVUSDT_DOM",
+    "enabled": true,
+    "symbol": "SOLVUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ARCUSDT_DOM",
+    "enabled": true,
+    "symbol": "ARCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AVAAIUSDT_DOM",
+    "enabled": true,
+    "symbol": "AVAAIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TRUMPUSDT_DOM",
+    "enabled": true,
+    "symbol": "TRUMPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MELANIAUSDT_DOM",
+    "enabled": true,
+    "symbol": "MELANIAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VTHOUSDT_DOM",
+    "enabled": true,
+    "symbol": "VTHOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ANIMEUSDT_DOM",
+    "enabled": true,
+    "symbol": "ANIMEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VINEUSDT_DOM",
+    "enabled": true,
+    "symbol": "VINEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PIPPINUSDT_DOM",
+    "enabled": true,
+    "symbol": "PIPPINUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VVVUSDT_DOM",
+    "enabled": true,
+    "symbol": "VVVUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BERAUSDT_DOM",
+    "enabled": true,
+    "symbol": "BERAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TSTUSDT_DOM",
+    "enabled": true,
+    "symbol": "TSTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LAYERUSDT_DOM",
+    "enabled": true,
+    "symbol": "LAYERUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HEIUSDT_DOM",
+    "enabled": true,
+    "symbol": "HEIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_B3USDT_DOM",
+    "enabled": true,
+    "symbol": "B3USDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_IPUSDT_DOM",
+    "enabled": true,
+    "symbol": "IPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GPSUSDT_DOM",
+    "enabled": true,
+    "symbol": "GPSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SHELLUSDT_DOM",
+    "enabled": true,
+    "symbol": "SHELLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KAITOUSDT_DOM",
+    "enabled": true,
+    "symbol": "KAITOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_REDUSDT_DOM",
+    "enabled": true,
+    "symbol": "REDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VICUSDT_DOM",
+    "enabled": true,
+    "symbol": "VICUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_EPICUSDT_DOM",
+    "enabled": true,
+    "symbol": "EPICUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BMTUSDT_DOM",
+    "enabled": true,
+    "symbol": "BMTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MUBARAKUSDT_DOM",
+    "enabled": true,
+    "symbol": "MUBARAKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FORMUSDT_DOM",
+    "enabled": true,
+    "symbol": "FORMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BIDUSDT_DOM",
+    "enabled": true,
+    "symbol": "BIDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TUTUSDT_DOM",
+    "enabled": true,
+    "symbol": "TUTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BROCCOLI714USDT_DOM",
+    "enabled": true,
+    "symbol": "BROCCOLI714USDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BROCCOLIF3BUSDT_DOM",
+    "enabled": true,
+    "symbol": "BROCCOLIF3BUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SIRENUSDT_DOM",
+    "enabled": true,
+    "symbol": "SIRENUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BANANAS31USDT_DOM",
+    "enabled": true,
+    "symbol": "BANANAS31USDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BRUSDT_DOM",
+    "enabled": true,
+    "symbol": "BRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PLUMEUSDT_DOM",
+    "enabled": true,
+    "symbol": "PLUMEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NILUSDT_DOM",
+    "enabled": true,
+    "symbol": "NILUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PARTIUSDT_DOM",
+    "enabled": true,
+    "symbol": "PARTIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_JELLYJELLYUSDT_DOM",
+    "enabled": true,
+    "symbol": "JELLYJELLYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MAVIAUSDT_DOM",
+    "enabled": true,
+    "symbol": "MAVIAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PAXGUSDT_DOM",
+    "enabled": true,
+    "symbol": "PAXGUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_WALUSDT_DOM",
+    "enabled": true,
+    "symbol": "WALUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FUNUSDT_DOM",
+    "enabled": true,
+    "symbol": "FUNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MLNUSDT_DOM",
+    "enabled": true,
+    "symbol": "MLNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GUNUSDT_DOM",
+    "enabled": true,
+    "symbol": "GUNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ATHUSDT_DOM",
+    "enabled": true,
+    "symbol": "ATHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BABYUSDT_DOM",
+    "enabled": true,
+    "symbol": "BABYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FORTHUSDT_DOM",
+    "enabled": true,
+    "symbol": "FORTHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PROMPTUSDT_DOM",
+    "enabled": true,
+    "symbol": "PROMPTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XCNUSDT_DOM",
+    "enabled": true,
+    "symbol": "XCNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_STOUSDT_DOM",
+    "enabled": true,
+    "symbol": "STOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FHEUSDT_DOM",
+    "enabled": true,
+    "symbol": "FHEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KERNELUSDT_DOM",
+    "enabled": true,
+    "symbol": "KERNELUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_WCTUSDT_DOM",
+    "enabled": true,
+    "symbol": "WCTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_INITUSDT_DOM",
+    "enabled": true,
+    "symbol": "INITUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AERGOUSDT_DOM",
+    "enabled": true,
+    "symbol": "AERGOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BANKUSDT_DOM",
+    "enabled": true,
+    "symbol": "BANKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_EPTUSDT_DOM",
+    "enabled": true,
+    "symbol": "EPTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DEEPUSDT_DOM",
+    "enabled": true,
+    "symbol": "DEEPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HYPERUSDT_DOM",
+    "enabled": true,
+    "symbol": "HYPERUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FISUSDT_DOM",
+    "enabled": true,
+    "symbol": "FISUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_JSTUSDT_DOM",
+    "enabled": true,
+    "symbol": "JSTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SIGNUSDT_DOM",
+    "enabled": true,
+    "symbol": "SIGNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PUNDIXUSDT_DOM",
+    "enabled": true,
+    "symbol": "PUNDIXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CTKUSDT_DOM",
+    "enabled": true,
+    "symbol": "CTKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AIOTUSDT_DOM",
+    "enabled": true,
+    "symbol": "AIOTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DOLOUSDT_DOM",
+    "enabled": true,
+    "symbol": "DOLOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HAEDALUSDT_DOM",
+    "enabled": true,
+    "symbol": "HAEDALUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SXTUSDT_DOM",
+    "enabled": true,
+    "symbol": "SXTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ASRUSDT_DOM",
+    "enabled": true,
+    "symbol": "ASRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ALPINEUSDT_DOM",
+    "enabled": true,
+    "symbol": "ALPINEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_B2USDT_DOM",
+    "enabled": true,
+    "symbol": "B2USDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MILKUSDT_DOM",
+    "enabled": true,
+    "symbol": "MILKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SYRUPUSDT_DOM",
+    "enabled": true,
+    "symbol": "SYRUPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_OBOLUSDT_DOM",
+    "enabled": true,
+    "symbol": "OBOLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DOODUSDT_DOM",
+    "enabled": true,
+    "symbol": "DOODUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_OGUSDT_DOM",
+    "enabled": true,
+    "symbol": "OGUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZKJUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZKJUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SKYAIUSDT_DOM",
+    "enabled": true,
+    "symbol": "SKYAIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NXPCUSDT_DOM",
+    "enabled": true,
+    "symbol": "NXPCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CVCUSDT_DOM",
+    "enabled": true,
+    "symbol": "CVCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AGTUSDT_DOM",
+    "enabled": true,
+    "symbol": "AGTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AWEUSDT_DOM",
+    "enabled": true,
+    "symbol": "AWEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BUSDT_DOM",
+    "enabled": true,
+    "symbol": "BUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SOONUSDT_DOM",
+    "enabled": true,
+    "symbol": "SOONUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HUMAUSDT_DOM",
+    "enabled": true,
+    "symbol": "HUMAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AUSDT_DOM",
+    "enabled": true,
+    "symbol": "AUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SOPHUSDT_DOM",
+    "enabled": true,
+    "symbol": "SOPHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MERLUSDT_DOM",
+    "enabled": true,
+    "symbol": "MERLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HYPEUSDT_DOM",
+    "enabled": true,
+    "symbol": "HYPEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BDXNUSDT_DOM",
+    "enabled": true,
+    "symbol": "BDXNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PUFFERUSDT_DOM",
+    "enabled": true,
+    "symbol": "PUFFERUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PORT3USDT_DOM",
+    "enabled": true,
+    "symbol": "PORT3USDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_1000000BOBUSDT_DOM",
+    "enabled": true,
+    "symbol": "1000000BOBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LAUSDT_DOM",
+    "enabled": true,
+    "symbol": "LAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SKATEUSDT_DOM",
+    "enabled": true,
+    "symbol": "SKATEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HOMEUSDT_DOM",
+    "enabled": true,
+    "symbol": "HOMEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_RESOLVUSDT_DOM",
+    "enabled": true,
+    "symbol": "RESOLVUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TAIKOUSDT_DOM",
+    "enabled": true,
+    "symbol": "TAIKOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SQDUSDT_DOM",
+    "enabled": true,
+    "symbol": "SQDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PUMPBTCUSDT_DOM",
+    "enabled": true,
+    "symbol": "PUMPBTCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SPKUSDT_DOM",
+    "enabled": true,
+    "symbol": "SPKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MYXUSDT_DOM",
+    "enabled": true,
+    "symbol": "MYXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FUSDT_DOM",
+    "enabled": true,
+    "symbol": "FUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NEWTUSDT_DOM",
+    "enabled": true,
+    "symbol": "NEWTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DMCUSDT_DOM",
+    "enabled": true,
+    "symbol": "DMCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HUSDT_DOM",
+    "enabled": true,
+    "symbol": "HUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_OLUSDT_DOM",
+    "enabled": true,
+    "symbol": "OLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SAHARAUSDT_DOM",
+    "enabled": true,
+    "symbol": "SAHARAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ICNTUSDT_DOM",
+    "enabled": true,
+    "symbol": "ICNTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BULLAUSDT_DOM",
+    "enabled": true,
+    "symbol": "BULLAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_IDOLUSDT_DOM",
+    "enabled": true,
+    "symbol": "IDOLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MUSDT_DOM",
+    "enabled": true,
+    "symbol": "MUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TANSSIUSDT_DOM",
+    "enabled": true,
+    "symbol": "TANSSIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PUMPUSDT_DOM",
+    "enabled": true,
+    "symbol": "PUMPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CROSSUSDT_DOM",
+    "enabled": true,
+    "symbol": "CROSSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AINUSDT_DOM",
+    "enabled": true,
+    "symbol": "AINUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CUSDT_DOM",
+    "enabled": true,
+    "symbol": "CUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VELVETUSDT_DOM",
+    "enabled": true,
+    "symbol": "VELVETUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TACUSDT_DOM",
+    "enabled": true,
+    "symbol": "TACUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ERAUSDT_DOM",
+    "enabled": true,
+    "symbol": "ERAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TAUSDT_DOM",
+    "enabled": true,
+    "symbol": "TAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CVXUSDT_DOM",
+    "enabled": true,
+    "symbol": "CVXUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SLPUSDT_DOM",
+    "enabled": true,
+    "symbol": "SLPUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZORAUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZORAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TAGUSDT_DOM",
+    "enabled": true,
+    "symbol": "TAGUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZRCUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZRCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ESPORTSUSDT_DOM",
+    "enabled": true,
+    "symbol": "ESPORTSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TREEUSDT_DOM",
+    "enabled": true,
+    "symbol": "TREEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_A2ZUSDT_DOM",
+    "enabled": true,
+    "symbol": "A2ZUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PLAYUSDT_DOM",
+    "enabled": true,
+    "symbol": "PLAYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NAORISUSDT_DOM",
+    "enabled": true,
+    "symbol": "NAORISUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TOWNSUSDT_DOM",
+    "enabled": true,
+    "symbol": "TOWNSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PROVEUSDT_DOM",
+    "enabled": true,
+    "symbol": "PROVEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ALLUSDT_DOM",
+    "enabled": true,
+    "symbol": "ALLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_INUSDT_DOM",
+    "enabled": true,
+    "symbol": "INUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_YALAUSDT_DOM",
+    "enabled": true,
+    "symbol": "YALAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CARVUSDT_DOM",
+    "enabled": true,
+    "symbol": "CARVUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AIOUSDT_DOM",
+    "enabled": true,
+    "symbol": "AIOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XNYUSDT_DOM",
+    "enabled": true,
+    "symbol": "XNYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_USELESSUSDT_DOM",
+    "enabled": true,
+    "symbol": "USELESSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_DAMUSDT_DOM",
+    "enabled": true,
+    "symbol": "DAMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_CUDISUSDT_DOM",
+    "enabled": true,
+    "symbol": "CUDISUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SAPIENUSDT_DOM",
+    "enabled": true,
+    "symbol": "SAPIENUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XPLUSDT_DOM",
+    "enabled": true,
+    "symbol": "XPLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_WLFIUSDT_DOM",
+    "enabled": true,
+    "symbol": "WLFIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SOMIUSDT_DOM",
+    "enabled": true,
+    "symbol": "SOMIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BASUSDT_DOM",
+    "enabled": true,
+    "symbol": "BASUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BTRUSDT_DOM",
+    "enabled": true,
+    "symbol": "BTRUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MITOUSDT_DOM",
+    "enabled": true,
+    "symbol": "MITOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HEMIUSDT_DOM",
+    "enabled": true,
+    "symbol": "HEMIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LINEAUSDT_DOM",
+    "enabled": true,
+    "symbol": "LINEAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_QUSDT_DOM",
+    "enabled": true,
+    "symbol": "QUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ARIAUSDT_DOM",
+    "enabled": true,
+    "symbol": "ARIAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TAKEUSDT_DOM",
+    "enabled": true,
+    "symbol": "TAKEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_PTBUSDT_DOM",
+    "enabled": true,
+    "symbol": "PTBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_OPENUSDT_DOM",
+    "enabled": true,
+    "symbol": "OPENUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FLOCKUSDT_DOM",
+    "enabled": true,
+    "symbol": "FLOCKUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_SKYUSDT_DOM",
+    "enabled": true,
+    "symbol": "SKYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AVNTUSDT_DOM",
+    "enabled": true,
+    "symbol": "AVNTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HOLOUSDT_DOM",
+    "enabled": true,
+    "symbol": "HOLOUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XPINUSDT_DOM",
+    "enabled": true,
+    "symbol": "XPINUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_UBUSDT_DOM",
+    "enabled": true,
+    "symbol": "UBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ZKCUSDT_DOM",
+    "enabled": true,
+    "symbol": "ZKCUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TOSHIUSDT_DOM",
+    "enabled": true,
+    "symbol": "TOSHIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_STBLUSDT_DOM",
+    "enabled": true,
+    "symbol": "STBLUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_0GUSDT_DOM",
+    "enabled": true,
+    "symbol": "0GUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AIAUSDT_DOM",
+    "enabled": true,
+    "symbol": "AIAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BARDUSDT_DOM",
+    "enabled": true,
+    "symbol": "BARDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ASTERUSDT_DOM",
+    "enabled": true,
+    "symbol": "ASTERUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TRADOORUSDT_DOM",
+    "enabled": true,
+    "symbol": "TRADOORUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_BLESSUSDT_DOM",
+    "enabled": true,
+    "symbol": "BLESSUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FLUIDUSDT_DOM",
+    "enabled": true,
+    "symbol": "FLUIDUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_COAIUSDT_DOM",
+    "enabled": true,
+    "symbol": "COAIUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_HANAUSDT_DOM",
+    "enabled": true,
+    "symbol": "HANAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MIRAUSDT_DOM",
+    "enabled": true,
+    "symbol": "MIRAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_AKEUSDT_DOM",
+    "enabled": true,
+    "symbol": "AKEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_ORDERUSDT_DOM",
+    "enabled": true,
+    "symbol": "ORDERUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LIGHTUSDT_DOM",
+    "enabled": true,
+    "symbol": "LIGHTUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_XANUSDT_DOM",
+    "enabled": true,
+    "symbol": "XANUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_FFUSDT_DOM",
+    "enabled": true,
+    "symbol": "FFUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_VFYUSDT_DOM",
+    "enabled": true,
+    "symbol": "VFYUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_EDENUSDT_DOM",
+    "enabled": true,
+    "symbol": "EDENUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_NOMUSDT_DOM",
+    "enabled": true,
+    "symbol": "NOMUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_TRUTHUSDT_DOM",
+    "enabled": true,
+    "symbol": "TRUTHUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_2ZUSDT_DOM",
+    "enabled": true,
+    "symbol": "2ZUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_EVAAUSDT_DOM",
+    "enabled": true,
+    "symbol": "EVAAUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_LYNUSDT_DOM",
+    "enabled": true,
+    "symbol": "LYNUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_KGENUSDT_DOM",
+    "enabled": true,
+    "symbol": "KGENUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_4USDT_DOM",
+    "enabled": true,
+    "symbol": "4USDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_GIGGLEUSDT_DOM",
+    "enabled": true,
+    "symbol": "GIGGLEUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_MONUSDT_DOM",
+    "enabled": true,
+    "symbol": "MONUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_YBUSDT_DOM",
+    "enabled": true,
+    "symbol": "YBUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_METUSDT_DOM",
+    "enabled": true,
+    "symbol": "METUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
+    }
+  },
+  {
+    "strategy_id": "LiquidityHunting_EULUSDT_DOM",
+    "enabled": true,
+    "symbol": "EULUSDT",
+    "parameters": {
+      "params_file": "configs/liquidity_hunting_params.yaml",
+      "params_key": "default"
     }
   }
 ]

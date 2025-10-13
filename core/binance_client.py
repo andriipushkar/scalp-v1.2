@@ -51,6 +51,17 @@ class BinanceClient:
                 return s
         raise ValueError(f"Символ {symbol} не знайдено в інформації про біржу.")
 
+    async def get_futures_ticker(self) -> list[dict]:
+        """Отримує 24-годинну статистику цін для всіх символів."""
+        if not self.client:
+            raise RuntimeError("BinanceClient не ініціалізовано.")
+        try:
+            tickers = await self.client.futures_ticker()
+            return tickers
+        except Exception as e:
+            logger.error(f"Помилка отримання тикерів: {e}")
+            raise
+
     async def get_futures_order_book(self, symbol: str, limit: int = 100):
         """Отримує знімок біржового стакану для вказаного символу."""
         if not self.client:
@@ -174,11 +185,12 @@ class BinanceClient:
             logger.error(f"Помилка отримання маркувальної ціни для {symbol}: {e}")
             raise
 
-    async def get_historical_klines(self, symbol: str, interval: str, limit: int = 500) -> pd.DataFrame:
+    async def get_historical_klines(self, symbol: str, interval: str, start_str: str = None, end_str: str = None, limit: int = 1000) -> pd.DataFrame:
         """Завантажує історичні свічки (K-лінії) для символу."""
         if not self.client:
             raise RuntimeError("BinanceClient не ініціалізовано.")
-        klines = await self.client.futures_klines(symbol=symbol, interval=interval, limit=limit)
+        # Note: The client's method is futures_historical_klines, not futures_klines for fetching by date range
+        klines = await self.client.futures_historical_klines(symbol=symbol, interval=interval, start_str=start_str, end_str=end_str, limit=limit)
         df = pd.DataFrame(klines, columns=[
             'open_time', 'open', 'high', 'low', 'close', 'volume',
             'close_time', 'quote_asset_volume', 'number_of_trades',
@@ -187,3 +199,13 @@ class BinanceClient:
         df['open_time'] = pd.to_datetime(df['open_time'], unit='ms')
         df[['open', 'high', 'low', 'close', 'volume']] = df[['open', 'high', 'low', 'close', 'volume']].astype(float)
         return df[['open_time', 'open', 'high', 'low', 'close', 'volume']]
+
+    async def keepalive_listen_key(self, listen_key: str):
+        """Продовжує термін дії listen key, щоб уникнути закриття потоку даних."""
+        if not self.client:
+            raise RuntimeError("BinanceClient не ініціалізовано.")
+        try:
+            await self.client.futures_stream_keepalive(listen_key)
+            logger.info(f"[UserData] Успішно продовжено термін дії listen key.")
+        except Exception as e:
+            logger.error(f"[UserData] Помилка продовження терміну дії listen key: {e}")

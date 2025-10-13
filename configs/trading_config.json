@@ -14,5 +14,8 @@
   "_margin_type_comment": "Тип маржі: ISOLATED (ізольована) або CROSSED (перехресна).",
 
   "max_active_trades": 10,
-  "_max_active_trades_comment": "Максимальна кількість одночасно відкритих позицій."
+  "_max_active_trades_comment": "Максимальна кількість одночасно відкритих позицій.",
+
+  "max_concurrent_symbols": 20,
+  "_max_concurrent_symbols_comment": "Максимальна кількість символів для одночасного моніторингу та торгівлі."
 }

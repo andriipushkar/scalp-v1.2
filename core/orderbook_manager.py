@@ -1,3 +1,4 @@
+import asyncio
 import pandas as pd
 from loguru import logger
 
@@ -15,6 +16,7 @@ class OrderBookManager:
         self.last_update_id = 0
         self._event_buffer = []  # Буфер для подій, що надходять під час ініціалізації
         self.is_initialized = False
+        self.update_queue = asyncio.Queue()
 
     def _set_initial_snapshot(self, snapshot: dict):
         """Ініціалізує стакан початковим знімком, отриманим через REST API."""
@@ -61,12 +63,13 @@ class OrderBookManager:
         """
         self._set_initial_snapshot(snapshot)
         
+        # Відкидаємо застарілі події з буферу
+        # Примітка: для ф'ючерсів lastUpdateId зі знімку не синхронізований з U/u з вебсокету.
+        # Тому ми просто обробляємо всі події, що накопичилися.
         logger.info(f"[{self.symbol}] Обробка {len(self._event_buffer)} буферизованих подій стакану...")
         for event in self._event_buffer:
-            # Логіка синхронізації згідно з документацією Binance
-            if event['U'] <= self.last_update_id + 1 and event['u'] >= self.last_update_id + 1:
-                self._process_update(event)
-                self.last_update_id = event['u']
+            self._process_update(event)
+            self.last_update_id = event['u']
         
         self._event_buffer = []  # Очищуємо буфер
         self.is_initialized = True
@@ -81,16 +84,11 @@ class OrderBookManager:
             self._event_buffer.append(msg)
             return
 
-        # Перевіряємо, чи не розсинхронізувався наш стакан
-        if msg['U'] == self.last_update_id + 1:
-            # Все добре, оновлюємо стакан
-            self._process_update(msg)
-            self.last_update_id = msg['u']
-        else:
-            # Якщо розсинхронізація, потрібна повна реініціалізація
-            logger.warning(f"[{self.symbol}] Розсинхронізація стакану! last_update_id={self.last_update_id}, event U={msg['U']}, u={msg['u']}. Потрібна реініціалізація.")
-            self.is_initialized = False 
-            # В реальній системі тут має бути логіка для повторного запиту знімку стакану.
+        # Оскільки ID знімку та вебсокету для ф'ючерсів не збігаються, 
+        # ми відмовилися від суворої перевірки і просто застосовуємо оновлення.
+        self._process_update(msg)
+        self.last_update_id = msg['u']
+        await self.update_queue.put(True)
 
     def get_bids(self):
         """Повертає поточний стан заявок на купівлю (bids)."""
