@@ -97,3 +97,15 @@ class OrderBookManager:
     def get_asks(self):
         """Повертає поточний стан заявок на продаж (asks)."""
         return self._asks
+
+    def get_best_bid(self) -> float | None:
+        """Повертає найкращу (найвищу) ціну купівлі."""
+        if not self._bids.empty:
+            return self._bids.index[0]
+        return None
+
+    def get_best_ask(self) -> float | None:
+        """Повертає найкращу (найнижчу) ціну продажу."""
+        if not self._asks.empty:
+            return self._asks.index[0]
+        return None

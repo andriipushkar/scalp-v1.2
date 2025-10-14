@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from core.binance_client import BinanceClient
 from core.orderbook_manager import OrderBookManager
 from strategies.liquidity_hunting_strategy import LiquidityHuntingStrategy
+from strategies.dynamic_orderbook_strategy import DynamicOrderbookStrategy
 from core.position_manager import PositionManager
 
 if TYPE_CHECKING:
@@ -36,13 +37,17 @@ class TradeExecutor:
         self.strategy = self._initialize_strategy()
 
     def _initialize_strategy(self):
-        strategy_name = self.strategy_id.split('_')[0]
+        strategy_name = self.strategy_config.get("strategy_name", self.strategy_id.split('_')[0])
+        params = self.strategy_config.get("params", {})
+
         if strategy_name == "LiquidityHunting":
-            return LiquidityHuntingStrategy(self.strategy_id, self.symbol, self.strategy_config["parameters"])
+            return LiquidityHuntingStrategy(self.strategy_id, self.symbol, params)
+        elif strategy_name == "DynamicOrderbook":
+            return DynamicOrderbookStrategy(self.strategy_id, self.symbol, params)
         else:
             raise ValueError(f"Невідома стратегія: {strategy_name}")
 
-    async def execute(self):
+    async def _check_and_open_position(self):
         # --- Debugging Logs ---
         logger.debug(f"[{self.symbol}] Checking execution guards: pending={self.symbol in self.pending_symbols}, position_exists={self.position_manager.get_position_by_symbol(self.symbol) is not None}, positions_count={self.position_manager.get_positions_count()}")
         
@@ -60,10 +65,78 @@ class TradeExecutor:
             await self._open_position(signal)
 
     async def start_monitoring(self):
-        logger.info(f"[{self.strategy_id}] Запуск моніторингу сигналів.")
+        logger.info(f"[{self.strategy_id}] Запуск моніторингу.")
         while True:
             await self.orderbook_manager.update_queue.get()  # Чекаємо на оновлення стакану
-            await self.execute()  # Перевіряємо сигнал
+
+            position = self.position_manager.get_position_by_symbol(self.symbol)
+
+            if position:
+                # Якщо позиція відкрита, моніторимо для коригувань
+                await self._handle_position_adjustment(position)
+            else:
+                # Якщо позиції немає, перевіряємо сигнали на вхід
+                await self._check_and_open_position()
+
+    async def _handle_position_adjustment(self, position: dict):
+        # Переконуємось, що стратегія підтримує динамічне коригування
+        if not hasattr(self.strategy, 'analyze_and_adjust'):
+            return
+
+        adjustment_command = self.strategy.analyze_and_adjust(position, self.orderbook_manager)
+
+        if not adjustment_command:
+            return
+
+        command = adjustment_command.get("command")
+        if command == "CLOSE_POSITION":
+            logger.info(f"[{self.strategy_id}] Отримано команду на завчасне закриття позиції.")
+            side = SIDE_SELL if position['side'] == 'Long' else SIDE_BUY
+            try:
+                # Спочатку скасовуємо існуючі SL/TP ордери
+                if position.get('sl_order_id'):
+                    await self.binance_client.cancel_order(self.symbol, position['sl_order_id'])
+                if position.get('tp_order_id'):
+                    await self.binance_client.cancel_order(self.symbol, position['tp_order_id'])
+                
+                # Закриваємо позицію ринковим ордером
+                await self.binance_client.futures_create_order(
+                    symbol=self.symbol, side=side, type=ORDER_TYPE_MARKET, quantity=position['quantity']
+                )
+                # Видаляємо позицію з менеджера
+                self.position_manager.close_position(self.symbol)
+                logger.success(f"[{self.strategy_id}] Позицію успішно закрито за ринковою ціною за командою стратегії.")
+            except Exception as e:
+                logger.error(f"[{self.strategy_id}] Помилка під час завчасного закриття позиції: {e}")
+
+        elif command == "ADJUST_TP_SL":
+            new_sl = adjustment_command.get('stop_loss')
+            new_tp = adjustment_command.get('take_profit')
+            if not new_sl or not new_tp:
+                return
+
+            logger.info(f"[{self.strategy_id}] Отримано команду на коригування SL/TP. New SL: {new_sl}, New TP: {new_tp}")
+            side = SIDE_SELL if position['side'] == 'Long' else SIDE_BUY
+            try:
+                # Скасовуємо старі ордери
+                if position.get('sl_order_id'):
+                    await self.binance_client.cancel_order(self.symbol, position['sl_order_id'])
+                if position.get('tp_order_id'):
+                    await self.binance_client.cancel_order(self.symbol, position['tp_order_id'])
+
+                # Створюємо нові ордери
+                new_sl_order = await self.binance_client.create_stop_market_order(self.symbol, side, position['quantity'], new_sl)
+                new_tp_order = await self.binance_client.create_take_profit_market_order(self.symbol, side, position['quantity'], new_tp)
+
+                # Оновлюємо дані в PositionManager
+                self.position_manager.update_orders(self.symbol, sl_order_id=new_sl_order['orderId'], tp_order_id=new_tp_order['orderId'])
+                # Також оновлюємо ціни SL/TP в самій позиції
+                position['stop_loss'] = new_sl
+                position['take_profit'] = new_tp
+                logger.success(f"[{self.strategy_id}] SL/TP ордери успішно оновлено. New SL ID: {new_sl_order['orderId']}, New TP ID: {new_tp_order['orderId']}")
+            except Exception as e:
+                logger.error(f"[{self.strategy_id}] Помилка під час коригування SL/TP: {e}")
+
 
     async def _open_position(self, signal: dict):
         side = SIDE_BUY if signal["signal_type"] == "Long" else SIDE_SELL
@@ -71,17 +144,25 @@ class TradeExecutor:
             self.pending_symbols.add(self.symbol)
 
             symbol_info = await self.binance_client.get_symbol_info(self.symbol)
-            tick_size = float(symbol_info['filters'][0]['tickSize'])
-
-            # Розраховуємо теоретичну ціну входу на основі стіни
-            entry_offset_ticks = self.strategy.params.get('entry_offset_ticks', 50)
-            wall_price = signal['wall_price']
-            if signal['signal_type'] == 'Long':
-                entry_price = wall_price + (entry_offset_ticks * tick_size)
-            else: # Short
-                entry_price = wall_price - (entry_offset_ticks * tick_size)
             
-            entry_price = round(entry_price, self.price_precision)
+            # Визначаємо тип ордера з параметрів стратегії
+            order_type = self.strategy.params.get("entry_order_type", ORDER_TYPE_LIMIT)
+
+            # Розрахунок ціни для визначення кількості
+            if order_type == ORDER_TYPE_MARKET:
+                # Для ринкового ордера використовуємо поточну найкращу ціну для розрахунку
+                price_for_calc = self.orderbook_manager.get_best_ask() if side == SIDE_BUY else self.orderbook_manager.get_best_bid()
+                if not price_for_calc:
+                    logger.warning(f"[{self.strategy_id}] Неможливо отримати ринкову ціну для розрахунку кількості.")
+                    self.pending_symbols.remove(self.symbol)
+                    return
+            else: # Для LIMIT ордера
+                tick_size = float(symbol_info['filters'][0]['tickSize'])
+                entry_offset_ticks = self.strategy.params.get('entry_offset_ticks', 50)
+                wall_price = signal['wall_price']
+                price_for_calc = wall_price + (entry_offset_ticks * tick_size) if signal['signal_type'] == 'Long' else wall_price - (entry_offset_ticks * tick_size)
+            
+            entry_price = round(price_for_calc, self.price_precision)
 
             balance = await self.binance_client.get_account_balance()
             margin_pct = self.orchestrator.trading_config.get('margin_per_trade_pct', 0.1)
@@ -98,25 +179,25 @@ class TradeExecutor:
 
             client_order_id = f"qt{int(datetime.now().timestamp() * 1000)}"
 
-            # Зберігаємо лише тип сигналу та ID стратегії, оскільки SL/TP будуть розраховані після виконання
             self.orchestrator.pending_sl_tp[client_order_id] = {
                 'signal_type': signal['signal_type'],
                 'strategy_id': self.strategy_id,
                 'quantity': quantity
             }
 
-            logger.info(f"[{self.strategy_id}] Виставлення LIMIT ордеру на вхід: {quantity} {self.symbol} за ціною {entry_price}")
-            await self.binance_client.futures_create_order(
-                symbol=self.symbol, 
-                side=side, 
-                type=ORDER_TYPE_LIMIT, 
-                quantity=quantity, 
-                price=str(entry_price), 
-                timeInForce=TIME_IN_FORCE_GTC,
-                newClientOrderId=client_order_id
-            )
+            order_params = {
+                "symbol": self.symbol, "side": side, "type": order_type, 
+                "quantity": quantity, "newClientOrderId": client_order_id
+            }
+
+            if order_type == ORDER_TYPE_LIMIT:
+                order_params["price"] = str(entry_price)
+                order_params["timeInForce"] = TIME_IN_FORCE_GTC
+
+            logger.info(f"[{self.strategy_id}] Виставлення {order_type} ордеру на вхід: {order_params}")
+            await self.binance_client.futures_create_order(**order_params)
             
-            logger.success(f"[{self.strategy_id}] Лімітний ордер {client_order_id} виставлено. Очікуємо виконання.")
+            logger.success(f"[{self.strategy_id}] {order_type} ордер {client_order_id} виставлено. Очікуємо виконання.")
 
         except Exception as e:
             logger.error(f"[{self.strategy_id}] Помилка відкриття позиції: {e}")

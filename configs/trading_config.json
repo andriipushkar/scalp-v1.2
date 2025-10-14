@@ -1,7 +1,7 @@
 {
   "_comment": "Головний конфігураційний файл для налаштувань торгівлі та ризик-менеджменту.",
 
-  "margin_per_trade_pct": 0.1,
+  "margin_per_trade_pct": 0.05,
   "_margin_per_trade_pct_comment": "Який відсоток від балансу використовувати як маржу для однієї угоди. 0.1 означає 10%.",
 
   "fee_pct": 0.0004,
@@ -16,6 +16,6 @@
   "max_active_trades": 10,
   "_max_active_trades_comment": "Максимальна кількість одночасно відкритих позицій.",
 
-  "max_concurrent_symbols": 20,
+  "max_concurrent_symbols": 50,
   "_max_concurrent_symbols_comment": "Максимальна кількість символів для одночасного моніторингу та торгівлі."
 }

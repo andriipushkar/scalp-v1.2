@@ -58,3 +58,20 @@ class PositionManager:
             self._save_state()
             return closed_pos
         return None
+
+    def update_orders(self, symbol: str, sl_order_id: int | None = None, tp_order_id: int | None = None):
+        """Оновлює ID стоп-лос та/або тейк-профіт ордерів для існуючої позиції."""
+        position = self.get_position_by_symbol(symbol)
+        if not position:
+            logger.warning(f"[{symbol}] Спроба оновити ордери для неіснуючої позиції.")
+            return
+
+        if sl_order_id is not None:
+            position['sl_order_id'] = sl_order_id
+            logger.info(f"[{symbol}] Оновлено ID SL ордера на {sl_order_id}.")
+        
+        if tp_order_id is not None:
+            position['tp_order_id'] = tp_order_id
+            logger.info(f"[{symbol}] Оновлено ID TP ордера на {tp_order_id}.")
+
+        self._save_state()
