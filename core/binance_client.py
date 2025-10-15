@@ -160,6 +160,18 @@ class BinanceClient:
             logger.error(f"Помилка отримання відкритих позицій: {e}")
             raise
 
+    async def get_all_account_symbols(self) -> list[str]:
+        """Отримує список всіх символів, з якими були операції на ф'ючерсному акаунті."""
+        if not self.client:
+            raise RuntimeError("BinanceClient не ініціалізовано.")
+        try:
+            account_info = await self.client.futures_account()
+            symbols = [p['symbol'] for p in account_info['positions']]
+            return symbols
+        except Exception as e:
+            logger.error(f"Помилка отримання списку символів з акаунту: {e}")
+            raise
+
     async def get_position_for_symbol(self, symbol: str) -> dict | None:
         """Отримує інформацію про позицію для конкретного символу."""
         if not self.client:
@@ -172,6 +184,18 @@ class BinanceClient:
             return None
         except Exception as e:
             logger.error(f"Помилка отримання позиції для {symbol}: {e}")
+            raise
+
+    async def get_account_trades(self, symbol: str, start_time: int = None, end_time: int = None, limit: int = 1000) -> list[dict]:
+        """Отримує історію угод для конкретного символу."""
+        if not self.client:
+            raise RuntimeError("BinanceClient не ініціалізовано.")
+        try:
+            # Увага: `futures_account_trades` - правильний метод
+            trades = await self.client.futures_account_trades(symbol=symbol, startTime=start_time, endTime=end_time, limit=limit)
+            return trades
+        except Exception as e:
+            logger.error(f"Помилка отримання історії угод для {symbol}: {e}")
             raise
 
     async def get_mark_price(self, symbol: str) -> float:
