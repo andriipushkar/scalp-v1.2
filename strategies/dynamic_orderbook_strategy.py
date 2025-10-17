@@ -10,9 +10,9 @@ class DynamicOrderbookStrategy(BaseStrategy):
     """
 
     def __init__(self, strategy_id: str, symbol: str, params: dict):
-        super().__init__(strategy_id, symbol)
-        self.params = params
+        super().__init__(strategy_id, symbol, params)
         self.stop_loss_percent = params.get("stop_loss_percent", 1.5)
+        self.initial_tp_min_search_percent = params.get("initial_tp_min_search_percent", 1.0)
         self.initial_tp_search_percent = params.get("initial_tp_search_percent", 3.0)
         self.trailing_sl_distance_percent = params.get("trailing_sl_distance_percent", 1.0)
         self.pre_emptive_close_threshold_mult = params.get("pre_emptive_close_threshold_mult", 2.0)
@@ -108,11 +108,12 @@ class DynamicOrderbookStrategy(BaseStrategy):
         if signal_type == 'Long':
             stop_loss = entry_price * (1 - self.stop_loss_percent / 100)
             
-            # Пошук TP в стакані, але не далі, ніж initial_tp_search_percent
+            # Пошук TP в стакані у заданому діапазоні
+            min_tp_price = entry_price * (1 + self.initial_tp_min_search_percent / 100)
             max_tp_price = entry_price * (1 + self.initial_tp_search_percent / 100)
             asks = order_book_manager.get_asks()
-            # Фільтруємо рівні, що знаходяться між ціною входу та максимальним TP
-            relevant_asks = asks[(asks.index > entry_price) & (asks.index <= max_tp_price)]
+            # Фільтруємо рівні, що знаходяться у потрібному діапазоні
+            relevant_asks = asks[(asks.index >= min_tp_price) & (asks.index <= max_tp_price)]
             
             if relevant_asks.empty:
                 take_profit = max_tp_price # Якщо не знайдено ліквідності, ставимо на максимальну межу
@@ -123,10 +124,11 @@ class DynamicOrderbookStrategy(BaseStrategy):
         elif signal_type == 'Short':
             stop_loss = entry_price * (1 + self.stop_loss_percent / 100)
 
-            # Пошук TP в стакані
+            # Пошук TP в стакані у заданому діапазоні
             min_tp_price = entry_price * (1 - self.initial_tp_search_percent / 100)
+            max_tp_price = entry_price * (1 - self.initial_tp_min_search_percent / 100)
             bids = order_book_manager.get_bids()
-            relevant_bids = bids[(bids.index < entry_price) & (bids.index >= min_tp_price)]
+            relevant_bids = bids[(bids.index <= max_tp_price) & (bids.index >= min_tp_price)]
 
             if relevant_bids.empty:
                 take_profit = min_tp_price
@@ -157,11 +159,13 @@ class DynamicOrderbookStrategy(BaseStrategy):
             # --- 1. Логіка Trailing Stop ---
             new_sl_price = current_price * (1 - self.trailing_sl_distance_percent / 100)
             if new_sl_price > current_sl and new_sl_price > entry_price:
-                logger.info(f"[{self.strategy_id}] Trailing SL. New SL: {new_sl_price} > Current SL: {current_sl}")
+                # Також перераховуємо TP, щоб він рухався за ціною
+                new_tp_price = current_price * (1 + self.initial_tp_search_percent / 100)
+                logger.info(f"[{self.strategy_id}] Trailing SL. New SL: {new_sl_price:.4f} > Current SL: {current_sl:.4f}. New TP: {new_tp_price:.4f}")
                 return {
                     "command": "ADJUST_TP_SL",
                     "stop_loss": new_sl_price,
-                    "take_profit": current_tp # TP залишаємо без змін
+                    "take_profit": new_tp_price
                 }
 
             # --- 2. Логіка випереджувального закриття ---
@@ -183,11 +187,13 @@ class DynamicOrderbookStrategy(BaseStrategy):
             # --- 1. Логіка Trailing Stop ---
             new_sl_price = current_price * (1 + self.trailing_sl_distance_percent / 100)
             if new_sl_price < current_sl and new_sl_price < entry_price:
-                logger.info(f"[{self.strategy_id}] Trailing SL. New SL: {new_sl_price} < Current SL: {current_sl}")
+                # Також перераховуємо TP, щоб він рухався за ціною
+                new_tp_price = current_price * (1 - self.initial_tp_search_percent / 100)
+                logger.info(f"[{self.strategy_id}] Trailing SL. New SL: {new_sl_price:.4f} < Current SL: {current_sl:.4f}. New TP: {new_tp_price:.4f}")
                 return {
                     "command": "ADJUST_TP_SL",
                     "stop_loss": new_sl_price,
-                    "take_profit": current_tp
+                    "take_profit": new_tp_price
                 }
 
             # --- 2. Логіка випереджувального закриття ---

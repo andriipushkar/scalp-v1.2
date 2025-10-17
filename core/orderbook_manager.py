@@ -5,26 +5,38 @@ from loguru import logger
 class OrderBookManager:
     """
     Керує локальною копією біржового стакану (Order Book) для одного символу.
-    Відповідає за її синхронізацію в реальному часі.
+    
+    Цей клас відповідає за:
+    1. Ініціалізацію стакану початковим "знімком" (snapshot) через REST API.
+    2. Синхронізацію стакану в реальному часі за допомогою повідомлень з WebSocket-потоку.
+    3. Надання доступу до даних про заявки на купівлю (bids) та продаж (asks).
     """
     def __init__(self, symbol: str):
-        """Ініціалізує порожній стакан для вказаного символу."""
+        """
+        Ініціалізує порожній стакан для вказаного символу.
+
+        Args:
+            symbol (str): Торговий символ (напр., 'BTCUSDT').
+        """
         self.symbol = symbol
-        # Використовуємо pandas DataFrame для ефективної роботи з даними стакану
-        self._bids = pd.DataFrame(columns=['price', 'quantity'])
-        self._asks = pd.DataFrame(columns=['price', 'quantity'])
+        # Використовуємо pandas DataFrame для ефективної роботи з даними стакану.
+        # Індексом є ціна, що дозволяє швидко оновлювати та знаходити дані.
+        self._bids = pd.DataFrame(columns=['price', 'quantity']).set_index('price')
+        self._asks = pd.DataFrame(columns=['price', 'quantity']).set_index('price')
         self.last_update_id = 0
         self._event_buffer = []  # Буфер для подій, що надходять під час ініціалізації
-        self.is_initialized = False
-        self.update_queue = asyncio.Queue()
+        self.is_initialized = False # Прапорець, що показує, чи стакан вже синхронізовано
+        self.update_queue = asyncio.Queue() # Черга для сповіщення про оновлення стакану
 
     def _set_initial_snapshot(self, snapshot: dict):
         """Ініціалізує стакан початковим знімком, отриманим через REST API."""
         self.last_update_id = snapshot['lastUpdateId']
         
+        # Створюємо DataFrame для bids (заявки на купівлю)
         bids_data = [{'price': float(p), 'quantity': float(q)} for p, q in snapshot['bids']]
         self._bids = pd.DataFrame(bids_data).set_index('price')
         
+        # Створюємо DataFrame для asks (заявки на продаж)
         asks_data = [{'price': float(p), 'quantity': float(q)} for p, q in snapshot['asks']]
         self._asks = pd.DataFrame(asks_data).set_index('price')
         
@@ -33,10 +45,10 @@ class OrderBookManager:
     def _process_update(self, update: dict):
         """Оновлює стакан на основі даних з вебсокет-потоку @depth."""
         # b - заявки на купівлю (bids)
-        for bid in update['b']:
-            price, quantity = float(bid[0]), float(bid[1])
+        for price_str, quantity_str in update['b']:
+            price, quantity = float(price_str), float(quantity_str)
             if quantity == 0:
-                # Якщо кількість 0, видаляємо рівень ціни
+                # Якщо кількість 0, видаляємо рівень ціни зі стакану
                 if price in self._bids.index:
                     self._bids = self._bids.drop(price)
             else:
@@ -44,15 +56,15 @@ class OrderBookManager:
                 self._bids.loc[price] = quantity
         
         # a - заявки на продаж (asks)
-        for ask in update['a']:
-            price, quantity = float(ask[0]), float(ask[1])
+        for price_str, quantity_str in update['a']:
+            price, quantity = float(price_str), float(quantity_str)
             if quantity == 0:
                 if price in self._asks.index:
                     self._asks = self._asks.drop(price)
             else:
                 self._asks.loc[price] = quantity
 
-        # Сортуємо для коректного відображення (біди - по спаданню, аски - по зростанню)
+        # Сортуємо для підтримки коректного порядку: біди - по спаданню, аски - по зростанню
         self._bids.sort_index(ascending=False, inplace=True)
         self._asks.sort_index(ascending=True, inplace=True)
 
@@ -63,11 +75,12 @@ class OrderBookManager:
         """
         self._set_initial_snapshot(snapshot)
         
-        # Відкидаємо застарілі події з буферу
-        # Примітка: для ф'ючерсів lastUpdateId зі знімку не синхронізований з U/u з вебсокету.
-        # Тому ми просто обробляємо всі події, що накопичилися.
+        # Обробляємо всі події, що накопичилися в буфері під час завантаження знімку
         logger.info(f"[{self.symbol}] Обробка {len(self._event_buffer)} буферизованих подій стакану...")
         for event in self._event_buffer:
+            # Важливо: для ф'ючерсів Binance, перша подія після знімку може мати
+            # `U` <= `lastUpdateId` та `u` >= `lastUpdateId` + 1.
+            # Ми просто обробляємо всі накопичені події.
             self._process_update(event)
             self.last_update_id = event['u']
         
@@ -84,18 +97,24 @@ class OrderBookManager:
             self._event_buffer.append(msg)
             return
 
-        # Оскільки ID знімку та вебсокету для ф'ючерсів не збігаються, 
-        # ми відмовилися від суворої перевірки і просто застосовуємо оновлення.
+        # Перевірка послідовності оновлень (для ф'ючерсів може бути неактуальною)
+        # `pu` - previous update id, `u` - final update id in this event
+        # if msg['pu'] != self.last_update_id:
+        #     logger.warning(f"[{self.symbol}] Пропущено оновлення стакану. Потрібна ресинхронізація.")
+        #     # Тут можна додати логіку ресинхронізації
+        #     return
+
         self._process_update(msg)
         self.last_update_id = msg['u']
+        # Сповіщаємо TradeExecutor, що стакан оновився
         await self.update_queue.put(True)
 
-    def get_bids(self):
-        """Повертає поточний стан заявок на купівлю (bids)."""
+    def get_bids(self) -> pd.DataFrame:
+        """Повертає поточний стан заявок на купівлю (bids) у вигляді DataFrame."""
         return self._bids
 
-    def get_asks(self):
-        """Повертає поточний стан заявок на продаж (asks)."""
+    def get_asks(self) -> pd.DataFrame:
+        """Повертає поточний стан заявок на продаж (asks) у вигляді DataFrame."""
         return self._asks
 
     def get_best_bid(self) -> float | None:

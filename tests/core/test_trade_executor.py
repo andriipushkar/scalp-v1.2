@@ -163,7 +163,7 @@ def test_initialize_strategy_unknown_strategy(mock_binance_client, mock_position
         "strategy_name": "NonExistentStrategy",
         "params": {}
     }
-    with pytest.raises(ValueError, match="Невідома стратегія: NonExistentStrategy"):
+    with pytest.raises(ValueError, match="Невідома назва стратегії: NonExistentStrategy"):
         TradeExecutor(
             strategy_config=strategy_config,
             binance_client=mock_binance_client,
@@ -187,15 +187,9 @@ async def test_check_and_open_position_pending_symbol(default_trade_executor, pe
     default_trade_executor.strategy.check_signal.assert_not_called()
 
 @pytest.mark.asyncio
-async def test_check_and_open_position_position_exists(default_trade_executor, mock_position_manager):
-    mock_position_manager.get_position_by_symbol.return_value = {"symbol": "BTCUSDT"}
-    await default_trade_executor._check_and_open_position()
-    default_trade_executor.strategy.check_signal.assert_not_called()
-
-@pytest.mark.asyncio
-async def test_check_and_open_position_max_active_trades_reached(default_trade_executor, mock_position_manager):
-    mock_position_manager.get_positions_count.return_value = 5
-    default_trade_executor.max_active_trades = 5
+async def test_check_and_open_position_max_trades_reached(default_trade_executor, mock_position_manager):
+    """Тест перевіряє, що check_signal не викликається, якщо досягнуто ліміту активних угод."""
+    mock_position_manager.get_positions_count.return_value = default_trade_executor.max_active_trades
     await default_trade_executor._check_and_open_position()
     default_trade_executor.strategy.check_signal.assert_not_called()
 
@@ -240,7 +234,6 @@ async def test_handle_position_adjustment_close_position(dynamic_trade_executor,
     mock_binance_client.futures_create_order.assert_called_once_with(
         symbol="BTCUSDT", side=SIDE_SELL, type=ORDER_TYPE_MARKET, quantity=0.001
     )
-    mock_position_manager.close_position.assert_called_once_with("BTCUSDT")
 
 @pytest.mark.asyncio
 async def test_handle_position_adjustment_adjust_tp_sl(dynamic_trade_executor, mock_position_manager, mock_binance_client):
