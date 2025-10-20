@@ -1,0 +1,43 @@
+
+# Основний конфігураційний файл
+
+# Список символів для моніторингу та торгівлі.
+# Якщо список порожній, бот спробує завантажити всі доступні символи з біржі.
+symbols:
+  - BTCUSDT
+  - ETHUSDT
+  - SOLUSDT
+  - BNBUSDT
+  - XRPUSDT
+  - ADAUSDT
+  - DOGEUSDT
+  - AVAXUSDT
+  - DOTUSDT
+  - LTCUSDT
+  - LINKUSDT
+  - UNIUSDT
+  - ATOMUSDT
+  - FILUSDT
+  - ETCUSDT
+  - APTUSDT
+  - ARBUSDT
+  - OPUSDT
+  - SUIUSDT
+
+# Список стратегій, які бот буде запускати.
+# Назви повинні відповідати назвам класів стратегій.
+enabled_strategies:
+  - DynamicOrderbookStrategy
+
+# Шляхи до файлів з налаштуваннями для кожної стратегії.
+strategy_settings:
+  DynamicOrderbookStrategy: "configs/strategies/dynamic_orderbook.yaml"
+
+# Загальні параметри торгівлі та ризик-менеджменту.
+trading_parameters:
+  margin_per_trade_pct: 0.05
+  fee_pct: 0.0004
+  leverage: 10
+  margin_type: "ISOLATED"
+  max_active_trades: 10
+  max_concurrent_symbols: 20

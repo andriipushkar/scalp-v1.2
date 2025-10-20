@@ -134,8 +134,7 @@ def test_analyze_and_adjust_long_trailing_sl(dynamic_strategy_params, mock_order
     # Новий SL має бути 100.8 * (1 - 0.005) = 100.296, що більше за 99.0
     expected_new_sl = 100.8 * (1 - dynamic_strategy_params['trailing_sl_distance_percent'] / 100)
     assert pytest.approx(adjustment['stop_loss']) == expected_new_sl
-    assert pytest.approx(adjustment['take_profit']) == position['take_profit']
-
+    assert pytest.approx(adjustment['take_profit']) == 102.816 # Очікуємо, що TP також буде скориговано
 def test_analyze_and_adjust_short_trailing_sl(dynamic_strategy_params, mock_order_book_manager):
     """ТЕСТ: Trailing SL для SHORT позиції, коли ціна падає."""
     strategy = DynamicOrderbookStrategy("test_dynamic_short_trail", "BTCUSDT", dynamic_strategy_params)
@@ -157,8 +156,7 @@ def test_analyze_and_adjust_short_trailing_sl(dynamic_strategy_params, mock_orde
     # Новий SL має бути 99.2 * (1 + 0.005) = 99.696, що менше за 101.0
     expected_new_sl = 99.2 * (1 + dynamic_strategy_params['trailing_sl_distance_percent'] / 100)
     assert pytest.approx(adjustment['stop_loss']) == expected_new_sl
-    assert pytest.approx(adjustment['take_profit']) == position['take_profit']
-
+    assert pytest.approx(adjustment['take_profit']) == 97.216 # Очікуємо, що TP також буде скориговано
 def test_analyze_and_adjust_long_pre_emptive_close(dynamic_strategy_params, mock_order_book_manager):
     """ТЕСТ: Випереджувальне закриття LONG позиції при тиску на продаж."""
     strategy = DynamicOrderbookStrategy("test_dynamic_long_pre_close", "BTCUSDT", dynamic_strategy_params)

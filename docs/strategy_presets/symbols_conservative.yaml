@@ -1,0 +1,404 @@
+# Profile: Conservative
+# INFO: These are auto-generated placeholder settings based on the 'conservative' profile.
+# For optimal performance, each symbol requires individual analysis and backtesting.
+symbol_specific:
+  BTCUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  ETHUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  SOLUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  BNBUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  XRPUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  DOGEUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  ADAUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  AVAXUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  DOTUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  LINKUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  LTCUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  BCHUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  ATOMUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  NEARUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  UNIUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  TRXUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  XLMUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  ETCUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  AAVEUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  FTMUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  EGLDUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  HBARUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  MANAUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  SANDUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  THETAUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  VETUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  FILUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  XMRUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  ZECUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  APEUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  GMTUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  AXSUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  KSMUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  RUNEUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  SNXUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  CRVUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  GALAUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  WAVESUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  MKRUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  COMPUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  ALGOUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  SUSHIUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  YFIUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  1INCHUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  GRTUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  CHZUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  ENJUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  ICPUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  ARUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2
+  KAVAUSDT:
+    entry_offset_ticks: 20
+    stop_loss_percent: 1.5
+    initial_tp_search_percent: 3
+    trailing_sl_distance_percent: 0.5
+    pre_emptive_close_threshold_mult: 4.0
+    wall_volume_multiplier: 15
+    max_spread_bps: 2

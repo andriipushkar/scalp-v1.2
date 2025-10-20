@@ -1,0 +1,131 @@
+# Profile: Scalping
+# High-frequency, short-term trading profile. Aims to capture small price movements.
+# Changes: Very tight stop-losses and take-profits, high sensitivity to entry/exit conditions.
+
+default:
+  entry_order_type: "MARKET"
+  entry_offset_ticks: 10
+  stop_loss_percent: 0.8
+  initial_tp_min_search_percent: 0.5
+  initial_tp_search_percent: 1.2
+  trailing_sl_distance_percent: 0.3
+  pre_emptive_close_threshold_mult: 3.5
+  wall_volume_multiplier: 10
+  min_wall_volume: 10
+  max_spread_bps: 1.5
+
+# Individual symbol settings remain unchanged. You might want to adjust these manually for scalping.
+symbol_specific:
+  BTCUSDT:
+    entry_offset_ticks: 30
+    wall_volume_multiplier: 15
+    min_wall_volume: 10
+    max_spread_bps: 3
+
+  ETHUSDT:
+    entry_offset_ticks: 25
+    trailing_sl_distance_percent: 0.8
+    min_wall_volume: 50
+
+  SOLUSDT:
+    min_wall_volume: 500
+
+  BNBUSDT:
+    entry_offset_ticks: 25
+    trailing_sl_distance_percent: 0.85
+    wall_volume_multiplier: 14
+    min_wall_volume: 100
+
+  XRPUSDT:
+    entry_offset_ticks: 15
+    trailing_sl_distance_percent: 1.0
+    wall_volume_multiplier: 10
+    min_wall_volume: 5000
+    max_spread_bps: 5
+
+  ADAUSDT:
+    entry_offset_ticks: 15
+    trailing_sl_distance_percent: 1.0
+    wall_volume_multiplier: 10
+    min_wall_volume: 10000
+    max_spread_bps: 5
+
+  DOGEUSDT:
+    entry_offset_ticks: 12
+    trailing_sl_distance_percent: 1.1
+    wall_volume_multiplier: 9
+    min_wall_volume: 50000
+    max_spread_bps: 6
+
+  DOTUSDT:
+    entry_offset_ticks: 18
+    trailing_sl_distance_percent: 0.95
+    wall_volume_multiplier: 11
+    min_wall_volume: 2000
+
+  MATICUSDT:
+    entry_offset_ticks: 15
+    trailing_sl_distance_percent: 1.0
+    wall_volume_multiplier: 10
+    min_wall_volume: 15000
+    max_spread_bps: 5
+
+  LTCUSDT:
+    entry_offset_ticks: 22
+    trailing_sl_distance_percent: 0.85
+    wall_volume_multiplier: 13
+    min_wall_volume: 200
+    max_spread_bps: 3
+
+  LINKUSDT:
+    min_wall_volume: 1000
+
+  UNIUSDT:
+    trailing_sl_distance_percent: 0.95
+    wall_volume_multiplier: 11
+    min_wall_volume: 1500
+
+  ATOMUSDT:
+    entry_offset_ticks: 18
+    trailing_sl_distance_percent: 0.95
+    wall_volume_multiplier: 11
+    min_wall_volume: 2000
+
+  FILUSDT:
+    trailing_sl_distance_percent: 1.0
+    wall_volume_multiplier: 10
+    min_wall_volume: 1000
+    max_spread_bps: 5
+
+  ETCUSDT:
+    entry_offset_ticks: 18
+    trailing_sl_distance_percent: 0.95
+    wall_volume_multiplier: 11
+    min_wall_volume: 500
+
+  APTUSDT:
+    trailing_sl_distance_percent: 1.1
+    wall_volume_multiplier: 10
+    min_wall_volume: 1000
+    max_spread_bps: 5
+
+  ARBUSDT:
+    entry_offset_ticks: 15
+    trailing_sl_distance_percent: 1.0
+    wall_volume_multiplier: 10
+    min_wall_volume: 10000
+    max_spread_bps: 5
+
+  OPUSDT:
+    entry_offset_ticks: 18
+    trailing_sl_distance_percent: 1.0
+    wall_volume_multiplier: 10
+    min_wall_volume: 5000
+    max_spread_bps: 5
+
+  SUIUSDT:
+    entry_offset_ticks: 15
+    trailing_sl_distance_percent: 1.1
+    wall_volume_multiplier: 9
+    min_wall_volume: 8000
+    max_spread_bps: 6
