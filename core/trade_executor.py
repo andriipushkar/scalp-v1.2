@@ -204,6 +204,7 @@ class TradeExecutor:
                 symbol=self.symbol, side=side, type=ORDER_TYPE_MARKET, quantity=current_position['quantity'], reduceOnly=True
             )
             logger.success(f"[{self.strategy_id}] Ринковий ордер на закриття позиції успішно виставлено.")
+            self.position_manager.close_position(self.symbol) # Оновлюємо внутрішній стан менеджера позицій
         except Exception as e:
             if "APIError(code=-2022): ReduceOnly Order is rejected" in str(e):
                 logger.warning(f"[{self.strategy_id}] Спроба закрити позицію, якої вже не існує.")

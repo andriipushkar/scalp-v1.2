@@ -14,6 +14,7 @@ from core.symbol_screener import SymbolScreener
 
 # Файл для збереження стану відкритих позицій між перезапусками
 POSITIONS_STATE_FILE = "logs/positions_state.json"
+RECONCILE_INTERVAL_SECONDS = 60 # Інтервал звірки стану позицій з біржею (в секундах)
 
 class BotOrchestrator:
     """
@@ -230,6 +231,18 @@ class BotOrchestrator:
             if symbol in self.pending_symbols:
                 self.pending_symbols.remove(symbol)
 
+    async def _periodic_reconcile(self):
+        """
+        Періодично звіряє стан позицій бота з біржею.
+        """
+        logger.info(f"Запуск задачі періодичної звірки позицій (кожні {RECONCILE_INTERVAL_SECONDS} секунд)...")
+        while True:
+            try:
+                await asyncio.sleep(RECONCILE_INTERVAL_SECONDS)
+                await self.position_manager.reconcile_with_exchange(self.binance_client)
+            except Exception as e:
+                logger.error(f"Помилка в задачі періодичної звірки: {e}", exc_info=True)
+
     async def start(self):
         """
         Основний метод, що запускає всі компоненти бота в правильній послідовдовності.
@@ -320,5 +333,6 @@ class BotOrchestrator:
             user_data_task = asyncio.create_task(self._user_data_listener())
             market_data_task = asyncio.create_task(self._market_data_listener(list(set(market_data_streams))))
             monitoring_tasks = [asyncio.create_task(ex.start_monitoring()) for ex in self.trade_executors]
+            reconciliation_task = asyncio.create_task(self._periodic_reconcile())
             
-            await asyncio.gather(user_data_task, market_data_task, *monitoring_tasks)
+            await asyncio.gather(user_data_task, market_data_task, reconciliation_task, *monitoring_tasks)
