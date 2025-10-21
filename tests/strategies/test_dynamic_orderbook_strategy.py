@@ -33,6 +33,24 @@ def mock_order_book_manager():
     mock.get_best_ask.return_value = None
     return mock
 
+@pytest.fixture
+def mock_binance_client():
+    """Створює мок для BinanceClient."""
+    mock = MagicMock()
+    # Мокуємо внутрішній .client атрибут
+    mock.client = MagicMock()
+    
+    # Налаштовуємо мок для futures_klines, щоб він був awaitable і повертав коректні дані
+    async def mock_futures_klines(symbol, interval, limit):
+        # Повертаємо простий список, що імітує відповідь API
+        return [
+            [1672531200000, "4100.0", "4101.0", "4099.0", "4100.5", "100", 1672531259999, "410050.0", 10, "50", "205025.0", "0"]
+            for _ in range(limit)
+        ]
+    
+    mock.client.futures_klines = MagicMock(side_effect=mock_futures_klines)
+    return mock
+
 # --- Тести для calculate_sl_tp ---
 
 def test_calculate_sl_tp_long_with_liquidity(dynamic_strategy_params, mock_order_book_manager):
@@ -221,7 +239,8 @@ def test_analyze_and_adjust_no_action_needed(dynamic_strategy_params, mock_order
 
 # --- Тести для check_signal ---
 
-def test_check_signal_long_on_bid_wall(dynamic_strategy_params, mock_order_book_manager):
+@pytest.mark.asyncio
+async def test_check_signal_long_on_bid_wall(dynamic_strategy_params, mock_order_book_manager, mock_binance_client):
     """ТЕСТ: Генерується LONG сигнал, коли є стіна на купівлю."""
     # Готуємо дані: 19 звичайних ордерів і одна велика стіна
     normal_bids = [[4099.0 - i*0.5, 10] for i in range(19)]
@@ -233,17 +252,22 @@ def test_check_signal_long_on_bid_wall(dynamic_strategy_params, mock_order_book_
     mock_order_book_manager.get_bids.return_value = pd.DataFrame(bids_data).set_index('price')
     mock_order_book_manager.get_asks.return_value = pd.DataFrame(asks_data).set_index('price')
 
+    # Вимикаємо фільтри для цього тесту
+    dynamic_strategy_params['ema_filter_enabled'] = False
+    dynamic_strategy_params['rsi_filter_enabled'] = False
+
     strategy = DynamicOrderbookStrategy("test_dynamic_signal_long", "BTCUSDT", dynamic_strategy_params)
     # Mock _get_tick_size as it's an internal helper
     strategy._get_tick_size = MagicMock(return_value=0.1)
 
-    signal = strategy.check_signal(mock_order_book_manager)
+    signal = await strategy.check_signal(mock_order_book_manager, mock_binance_client)
 
     assert signal is not None
     assert signal['signal_type'] == 'Long'
     assert signal['wall_price'] == 4100.0
 
-def test_check_signal_short_on_ask_wall(dynamic_strategy_params, mock_order_book_manager):
+@pytest.mark.asyncio
+async def test_check_signal_short_on_ask_wall(dynamic_strategy_params, mock_order_book_manager, mock_binance_client):
     """ТЕСТ: Генерується SHORT сигнал, коли є стіна на продаж."""
     # Робимо ціну купівлі ближчою до стіни, щоб пройти перевірку відстані
     bids_data = {'price': [4109.9, 4109.8], 'quantity': [10, 8]} # Best bid close to wall
@@ -256,16 +280,20 @@ def test_check_signal_short_on_ask_wall(dynamic_strategy_params, mock_order_book
     mock_order_book_manager.get_bids.return_value = pd.DataFrame(bids_data).set_index('price')
     mock_order_book_manager.get_asks.return_value = pd.DataFrame(asks_data).set_index('price')
 
+    dynamic_strategy_params['ema_filter_enabled'] = False
+    dynamic_strategy_params['rsi_filter_enabled'] = False
+
     strategy = DynamicOrderbookStrategy("test_dynamic_signal_short", "BTCUSDT", dynamic_strategy_params)
     strategy._get_tick_size = MagicMock(return_value=0.1)
 
-    signal = strategy.check_signal(mock_order_book_manager)
+    signal = await strategy.check_signal(mock_order_book_manager, mock_binance_client)
 
     assert signal is not None
     assert signal['signal_type'] == 'Short'
     assert signal['wall_price'] == 4110.0
 
-def test_check_signal_no_wall(dynamic_strategy_params, mock_order_book_manager):
+@pytest.mark.asyncio
+async def test_check_signal_no_wall(dynamic_strategy_params, mock_order_book_manager, mock_binance_client):
     """ТЕСТ: Сигнал НЕ генерується, якщо немає явних стін."""
     # Об'єми приблизно однакові
     bids_data = {'price': [4100.0, 4099.0], 'quantity': [10, 8]}
@@ -273,14 +301,18 @@ def test_check_signal_no_wall(dynamic_strategy_params, mock_order_book_manager):
     mock_order_book_manager.get_bids.return_value = pd.DataFrame(bids_data).set_index('price')
     mock_order_book_manager.get_asks.return_value = pd.DataFrame(asks_data).set_index('price')
 
+    dynamic_strategy_params['ema_filter_enabled'] = False
+    dynamic_strategy_params['rsi_filter_enabled'] = False
+
     strategy = DynamicOrderbookStrategy("test_dynamic_no_wall", "BTCUSDT", dynamic_strategy_params)
     strategy._get_tick_size = MagicMock(return_value=0.1)
 
-    signal = strategy.check_signal(mock_order_book_manager)
+    signal = await strategy.check_signal(mock_order_book_manager, mock_binance_client)
 
     assert signal is None
 
-def test_check_signal_wall_too_far(dynamic_strategy_params, mock_order_book_manager):
+@pytest.mark.asyncio
+async def test_check_signal_wall_too_far(dynamic_strategy_params, mock_order_book_manager, mock_binance_client):
     """ТЕСТ: Сигнал НЕ генерується, якщо стіна занадто далеко."""
     # Стіна є, але best_ask_price занадто далеко від неї
     normal_bids = [[4000.0 - i*0.5, 10] for i in range(19)]
@@ -292,14 +324,18 @@ def test_check_signal_wall_too_far(dynamic_strategy_params, mock_order_book_mana
     mock_order_book_manager.get_bids.return_value = pd.DataFrame(bids_data).set_index('price')
     mock_order_book_manager.get_asks.return_value = pd.DataFrame(asks_data).set_index('price')
 
+    dynamic_strategy_params['ema_filter_enabled'] = False
+    dynamic_strategy_params['rsi_filter_enabled'] = False
+
     strategy = DynamicOrderbookStrategy("test_dynamic_wall_too_far", "BTCUSDT", dynamic_strategy_params)
     strategy._get_tick_size = MagicMock(return_value=0.1)
 
-    signal = strategy.check_signal(mock_order_book_manager)
+    signal = await strategy.check_signal(mock_order_book_manager, mock_binance_client)
 
     assert signal is None
 
-def test_check_signal_wide_spread_no_signal(dynamic_strategy_params, mock_order_book_manager):
+@pytest.mark.asyncio
+async def test_check_signal_wide_spread_no_signal(dynamic_strategy_params, mock_order_book_manager, mock_binance_client):
     """ТЕСТ: Сигнал НЕ генерується, якщо спред занадто широкий."""
     # Імітуємо широкий спред (наприклад, 10 bps, коли max_spread_bps = 5)
     bids_data = {'price': [4000.0, 3999.0], 'quantity': [200, 10]}
@@ -307,14 +343,18 @@ def test_check_signal_wide_spread_no_signal(dynamic_strategy_params, mock_order_
     mock_order_book_manager.get_bids.return_value = pd.DataFrame(bids_data).set_index('price')
     mock_order_book_manager.get_asks.return_value = pd.DataFrame(asks_data).set_index('price')
 
+    dynamic_strategy_params['ema_filter_enabled'] = False
+    dynamic_strategy_params['rsi_filter_enabled'] = False
+
     strategy = DynamicOrderbookStrategy("test_dynamic_wide_spread", "BTCUSDT", dynamic_strategy_params)
     strategy._get_tick_size = MagicMock(return_value=0.1)
 
-    signal = strategy.check_signal(mock_order_book_manager)
+    signal = await strategy.check_signal(mock_order_book_manager, mock_binance_client)
 
     assert signal is None
 
-def test_check_signal_low_wall_volume_no_signal(dynamic_strategy_params, mock_order_book_manager):
+@pytest.mark.asyncio
+async def test_check_signal_low_wall_volume_no_signal(dynamic_strategy_params, mock_order_book_manager, mock_binance_client):
     """ТЕСТ: Сигнал НЕ генерується, якщо об'єм стіни менший за мінімальний."""
     # Імітуємо стіну, але з об'ємом меншим за min_wall_volume (100)
     normal_bids = [[4099.0 - i*0.5, 10] for i in range(19)]
@@ -326,9 +366,12 @@ def test_check_signal_low_wall_volume_no_signal(dynamic_strategy_params, mock_or
     mock_order_book_manager.get_bids.return_value = pd.DataFrame(bids_data).set_index('price')
     mock_order_book_manager.get_asks.return_value = pd.DataFrame(asks_data).set_index('price')
 
+    dynamic_strategy_params['ema_filter_enabled'] = False
+    dynamic_strategy_params['rsi_filter_enabled'] = False
+
     strategy = DynamicOrderbookStrategy("test_dynamic_low_wall_vol", "BTCUSDT", dynamic_strategy_params)
     strategy._get_tick_size = MagicMock(return_value=0.1)
 
-    signal = strategy.check_signal(mock_order_book_manager)
+    signal = await strategy.check_signal(mock_order_book_manager, mock_binance_client)
 
     assert signal is None
