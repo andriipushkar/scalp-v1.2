@@ -21,4 +21,4 @@ trading_parameters:
   leverage: 10
   margin_type: "ISOLATED"
   max_active_trades: 10
-  max_concurrent_symbols: 50
+  max_concurrent_symbols: 100

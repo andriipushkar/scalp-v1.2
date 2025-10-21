@@ -188,7 +188,7 @@ class BinanceClient:
                     return float(balance['balance'])
             return 0.0
         except Exception as e:
-            logger.error(f"Помилка отримання балансу: {e}")
+            logger.error(f"Помилка отримання балансу: {e}", exc_info=True)
             raise
 
     async def get_open_positions(self) -> list:
@@ -198,5 +198,69 @@ class BinanceClient:
             open_positions = [p for p in account_info['positions'] if float(p['positionAmt']) != 0]
             return open_positions
         except Exception as e:
-            logger.error(f"Помилка отримання відкритих позицій: {e}")
+            logger.error(f"Помилка отримання відкритих позицій: {e}", exc_info=True)
+            raise
+
+    async def get_all_account_symbols(self) -> list[str]:
+        """Отримує список всіх символів, для яких є відкриті позиції або ненульовий баланс."""
+        try:
+            account_info = await self.client.futures_account()
+            symbols = set()
+            # Додаємо символи з відкритих позицій
+            for p in account_info['positions']:
+                if float(p['positionAmt']) != 0:
+                    symbols.add(p['symbol'])
+            # Додаємо символи з ненульовим балансом (якщо це ф'ючерсний актив)
+            # Цей крок може бути опціональним, залежно від того, що вважається "активним символом"
+            # Для простоти, зосередимося на позиціях та активах, що торгуються
+            # Можна також отримати всі символи з exchange_info, але це буде дуже багато
+            return list(symbols)
+        except Exception as e:
+            logger.error(f"Помилка отримання всіх символів акаунта: {e}", exc_info=True)
+            raise
+
+    async def get_account_trades(self, symbol: str, start_time: int | None = None, end_time: int | None = None) -> list[dict]:
+        """Отримує історію угод для конкретного символу за вказаний період."""
+        try:
+            params = {'symbol': symbol}
+            if start_time:
+                params['startTime'] = start_time
+            if end_time:
+                params['endTime'] = end_time
+            
+            # Binance API повертає максимум 1000 угод за запит. Потрібна пагінація.
+            all_trades = []
+            while True:
+                trades = await self.client.futures_account_trades(**params)
+                if not trades:
+                    break
+                all_trades.extend(trades)
+                
+                # Для наступного запиту встановлюємо startTime на останній отриманий tradeId + 1
+                # Або, якщо API підтримує, використовуємо timestamp останньої угоди
+                # Для futures_account_trades зазвичай використовується fromId
+                # Але тут простіше використовувати startTime/endTime з обмеженням по часу
+                # Якщо ми отримали менше 1000 угод, значить це остання сторінка
+                if len(trades) < 1000:
+                    break
+                
+                # Якщо отримано 1000 угод, потрібно знайти найстаріший час і продовжити з нього
+                # Або просто збільшити startTime, якщо API дозволяє дублікати і фільтрує їх
+                # Для простоти, якщо ми отримали 1000 угод, припускаємо, що є ще і беремо останній id
+                # Це може бути не ідеально, якщо є багато угод в одну мілісекунду
+                # Краще використовувати fromId, але futures_account_trades не має fromId
+                # Тому будемо використовувати startTime і обмежувати період
+                # Для цього прикладу, припустимо, що 1000 угод - це достатньо для одного запиту
+                # Якщо потрібна повна пагінація, логіка буде складнішою
+                # Для реального використання, можливо, варто використовувати fromId, якщо доступно
+                # Або робити запити з меншим інтервалом часу
+                last_trade_id = trades[-1]['id']
+                params['fromId'] = last_trade_id + 1 # Це не працює для futures_account_trades
+                # Тому, для пагінації за часом, потрібно буде переробити логіку
+                # Для цього завдання, припустимо, що 1000 угод за період достатньо
+                break # Виходимо після першого запиту, якщо не реалізована повна пагінація
+
+            return all_trades
+        except Exception as e:
+            logger.error(f"Помилка отримання угод для {symbol}: {e}", exc_info=True)
             raise

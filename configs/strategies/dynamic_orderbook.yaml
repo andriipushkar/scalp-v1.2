@@ -18,34 +18,13 @@ default:
 
   # --- Управління Ордерами (швидкий вхід/вихід) ---
   entry_offset_ticks: 1 # Входимо близько до стінки
-  stop_loss_percent: 0.5 # Дуже жорсткий стоп-лос для мінімізації збитків
-  initial_tp_min_search_percent: 0.4 # Мінімальна ціль по прибутку
+  stop_loss_percent: 0.4 # Дуже жорсткий стоп-лос для мінімізації збитків
+  initial_tp_min_search_percent: 0.3 # Мінімальна ціль по прибутку
   initial_tp_search_percent: 0.8 # Максимальна ціль по прибутку
 
   # --- Управління Позицією (агресивне) ---
-  trailing_sl_distance_percent: 0.2 # Дуже близький трейлінг-стоп для фіксації мікро-прибутку
+
   pre_emptive_close_threshold_mult: 1.5 # Більш чутливе закриття при зміні тиску в стакані
 
 # --- Специфічні налаштування для символів (приклади для скальпінгу) ---
 # Тут ви можете перевизначити будь-який з параметрів default для конкретної монети
-symbol_specific:
-  BTCUSDT:
-    min_wall_volume: 500000 # Для BTC все ще потрібен великий обсяг
-    max_spread_bps: 1.0 # Для BTC спред має бути мінімальним
-    stop_loss_percent: 0.3
-    initial_tp_search_percent: 0.6
-    trailing_sl_distance_percent: 0.15
-
-  ETHUSDT:
-    min_wall_volume: 250000
-    max_spread_bps: 1.5
-    stop_loss_percent: 0.4
-    initial_tp_search_percent: 0.7
-    trailing_sl_distance_percent: 0.2
-
-  # Приклад для більш волатильного активу
-  SOLUSDT:
-    max_spread_bps: 4
-    stop_loss_percent: 0.6
-    initial_tp_search_percent: 1.0
-    trailing_sl_distance_percent: 0.3
