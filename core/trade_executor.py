@@ -81,18 +81,13 @@ class TradeExecutor:
         
         try:
             self.pending_symbols.add(self.symbol)
-            order_type = self.strategy.params.get("entry_order_type", ORDER_TYPE_LIMIT)
+            order_type = ORDER_TYPE_MARKET
 
-            if order_type == ORDER_TYPE_MARKET:
-                price_for_calc = self.orderbook_manager.get_best_ask() if side == SIDE_BUY else self.orderbook_manager.get_best_bid()
-                if not price_for_calc:
-                    logger.warning(f"[{self.strategy_id}] Неможливо отримати ринкову ціну для розрахунку кількості.")
-                    self.pending_symbols.remove(self.symbol)
-                    return
-            else:
-                entry_offset_ticks = self.strategy.params.get('entry_offset_ticks', 1)
-                wall_price = signal['wall_price']
-                price_for_calc = wall_price + (entry_offset_ticks * self.tick_size) if signal['signal_type'] == 'Long' else wall_price - (entry_offset_ticks * self.tick_size)
+            price_for_calc = self.orderbook_manager.get_best_ask() if side == SIDE_BUY else self.orderbook_manager.get_best_bid()
+            if not price_for_calc:
+                logger.warning(f"[{self.strategy_id}] Неможливо отримати ринкову ціну для розрахунку кількості.")
+                self.pending_symbols.remove(self.symbol)
+                return
             
             entry_price = round(price_for_calc, self.price_precision)
 
@@ -118,9 +113,6 @@ class TradeExecutor:
                 "symbol": self.symbol, "side": side, "type": order_type, 
                 "quantity": quantity, "newClientOrderId": client_order_id
             }
-            if order_type == ORDER_TYPE_LIMIT:
-                order_params["price"] = f"{entry_price:.{self.price_precision}f}"
-                order_params["timeInForce"] = TIME_IN_FORCE_GTC
 
             logger.info(f"[{self.strategy_id}] Виставлення {order_type} ордеру на вхід: {order_params}")
             await self.binance_client.futures_create_order(**order_params)

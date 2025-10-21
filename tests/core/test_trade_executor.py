@@ -50,10 +50,7 @@ def mock_strategy():
     strategy = MagicMock(spec=BaseStrategy)
     strategy.strategy_id = "TestStrategy_BTCUSDT"
     strategy.symbol = "BTCUSDT"
-    strategy.params = {
-        "entry_order_type": ORDER_TYPE_LIMIT,
-        "entry_offset_ticks": 50
-    }
+    strategy.params = {}
     return strategy
 
 @pytest.fixture
@@ -97,27 +94,8 @@ async def test_check_and_open_position_signal_found(trade_executor: TradeExecuto
     trade_executor.strategy.check_signal.assert_called_once()
     trade_executor._open_position.assert_called_once_with({"signal_type": "Long", "wall_price": 100.0})
 
-async def test_open_position_limit_order(trade_executor: TradeExecutor, mock_binance_client, mock_orchestrator):
-    """ТЕСТ: Коректне виставлення лімітного ордеру."""
-    signal = {"signal_type": "Short", "wall_price": 100.0}
-    
-    await trade_executor._open_position(signal)
-    
-    mock_binance_client.futures_create_order.assert_called_once()
-    args, kwargs = mock_binance_client.futures_create_order.call_args
-    
-    assert kwargs['symbol'] == "BTCUSDT"
-    assert kwargs['side'] == SIDE_SELL
-    assert kwargs['type'] == ORDER_TYPE_LIMIT
-    assert kwargs['price'] == "99.50" # 100.0 - (50 * 0.01)
-    assert kwargs['quantity'] == pytest.approx(10.05) # (1000 * 0.1 * 10) / 99.5 = 10.05025 -> floor to 10.050
-    assert kwargs['timeInForce'] == TIME_IN_FORCE_GTC
-    assert "newClientOrderId" in kwargs
-    assert kwargs['newClientOrderId'] in mock_orchestrator.pending_sl_tp
-
-async def test_open_position_market_order(trade_executor: TradeExecutor, mock_binance_client, mock_orchestrator):
-    """ТЕСТ: Коректне виставлення ринкового ордеру."""
-    trade_executor.strategy.params["entry_order_type"] = ORDER_TYPE_MARKET
+async def test_open_position_entry_order(trade_executor: TradeExecutor, mock_binance_client, mock_orchestrator):
+    """ТЕСТ: Коректне виставлення ринкового ордеру на вхід."""
     signal = {"signal_type": "Long", "wall_price": 100.0}
     
     await trade_executor._open_position(signal)
@@ -127,6 +105,8 @@ async def test_open_position_market_order(trade_executor: TradeExecutor, mock_bi
     
     assert kwargs['type'] == ORDER_TYPE_MARKET
     assert kwargs['quantity'] == pytest.approx(9.99) # (1000 * 0.1 * 10) / 100.1
+    assert "newClientOrderId" in kwargs
+    assert kwargs['newClientOrderId'] in mock_orchestrator.pending_sl_tp
 
 async def test_handle_position_adjustment_close_position(trade_executor: TradeExecutor, mock_position_manager, mock_binance_client):
     """ТЕСТ: Коректне завчасне закриття позиції."""
