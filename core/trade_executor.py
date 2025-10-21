@@ -65,7 +65,7 @@ class TradeExecutor:
         if self.position_manager.get_positions_count() >= self.max_active_trades:
             return
 
-        signal = self.strategy.check_signal(self.orderbook_manager)
+        signal = await self.strategy.check_signal(self.orderbook_manager, self.binance_client)
         if not signal:
             return
 
@@ -202,9 +202,14 @@ class TradeExecutor:
         logger.warning(f"[{self.strategy_id}] Запуск безпечного закриття позиції для {self.symbol}.")
         side = SIDE_SELL if position['side'] == 'Long' else SIDE_BUY
         try:
+            current_position = self.position_manager.get_position_by_symbol(self.symbol)
+            if not current_position or current_position['quantity'] == 0:
+                logger.warning(f"[{self.strategy_id}] Спроба закрити позицію для {self.symbol}, але активної позиції не знайдено.")
+                return
+
             await self.binance_client.cancel_all_open_orders(self.symbol)
             await self.binance_client.futures_create_order(
-                symbol=self.symbol, side=side, type=ORDER_TYPE_MARKET, quantity=position['quantity'], reduceOnly=True
+                symbol=self.symbol, side=side, type=ORDER_TYPE_MARKET, quantity=current_position['quantity'], reduceOnly=True
             )
             logger.success(f"[{self.strategy_id}] Ринковий ордер на закриття позиції успішно виставлено.")
         except Exception as e:

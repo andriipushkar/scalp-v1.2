@@ -135,6 +135,7 @@ async def test_handle_position_adjustment_close_position(trade_executor: TradeEx
         "sl_order_id": 123, "tp_order_id": 456
     }
     trade_executor.strategy.analyze_and_adjust.return_value = {"command": "CLOSE_POSITION"}
+    mock_position_manager.get_position_by_symbol.return_value = position
     
     await trade_executor._handle_position_adjustment(position)
     
