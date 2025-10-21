@@ -75,17 +75,33 @@ class BotOrchestrator:
         logger.info(f"Налаштування торгового середовища для {len(symbols)} символів...")
         unique_symbols = set(symbols)
         valid_symbols = set()
-        leverage = self.trading_config.get('leverage', 10)
+        leverage_to_set = self.trading_config.get('leverage', 10)
         margin_type = self.trading_config.get('margin_type', 'ISOLATED')
-        
+
         for symbol in unique_symbols:
             try:
-                await self.binance_client.set_leverage(symbol, leverage)
+                # --- Перевірка кредитного плеча ---
+                brackets_info = await self.binance_client.get_leverage_brackets(symbol)
+                if brackets_info:
+                    # The endpoint returns a list, for a single symbol it has one element
+                    symbol_brackets = brackets_info[0]['brackets']
+                    max_leverage = max(b['initialLeverage'] for b in symbol_brackets)
+
+                    if leverage_to_set > max_leverage:
+                        logger.warning(f"Задане кредитне плече {leverage_to_set}x для {symbol} перевищує максимальне ({max_leverage}x). Символ пропускається.")
+                        continue
+                else:
+                    logger.warning(f"Не вдалося отримати інформацію про кредитне плече для {symbol}. Символ пропускається.")
+                    continue
+
+                # --- Встановлення параметрів ---
+                await self.binance_client.set_leverage(symbol, leverage_to_set)
                 await self.binance_client.set_margin_type(symbol, margin_type)
                 valid_symbols.add(symbol)
+
             except Exception as e:
                 logger.error(f"Не вдалося налаштувати середовище для {symbol}: {e}. Символ пропускається.")
-        
+
         logger.info(f"Торгове середовище успішно налаштовано для {len(valid_symbols)} символів.")
         return list(valid_symbols)
 
@@ -201,7 +217,8 @@ class BotOrchestrator:
                         await self.binance_client.cancel_order(symbol, other_order_id)
                         logger.success(f"[UserData] Успішно скасовано зустрічний ордер {other_order_id}.")
                     except Exception as e:
-                        if "Order does not exist" not in str(e): 
+                        # Ігноруємо помилку, якщо ордер вже не існує (був виконаний або скасований раніше)
+                        if "Order does not exist" not in str(e) and "APIError(code=-2011)" not in str(e):
                             logger.error(f"[UserData] Не вдалося скасувати ордер {other_order_id}: {e}")
                 
                 self.position_manager.close_position(symbol)

@@ -1,5 +1,11 @@
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
+
 from core.orderbook_manager import OrderBookManager
+
+if TYPE_CHECKING:
+    from core.binance_client import BinanceClient
+
 
 class BaseStrategy(ABC):
     """
@@ -23,7 +29,7 @@ class BaseStrategy(ABC):
         self.params = params
 
     @abstractmethod
-    def check_signal(self, order_book_manager: OrderBookManager) -> dict | None:
+    async def check_signal(self, order_book_manager: OrderBookManager, binance_client: 'BinanceClient') -> dict | None:
         """
         Абстрактний метод для перевірки наявності торгового сигналу (Long або Short).
         
@@ -32,6 +38,7 @@ class BaseStrategy(ABC):
 
         Args:
             order_book_manager (OrderBookManager): Менеджер стакану для поточного символу.
+            binance_client (BinanceClient): Клієнт Binance для доступу до додаткових даних, напр. свічок.
 
         Returns:
             dict | None: Словник з деталями сигналу, якщо він знайдений, інакше None.

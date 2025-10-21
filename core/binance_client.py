@@ -58,6 +58,20 @@ class BinanceClient:
                 return s
         raise ValueError(f"Символ {symbol} не знайдено в інформації про біржу.")
 
+    async def get_leverage_brackets(self, symbol: str) -> list[dict] | None:
+        """
+        Отримує інформацію про доступні кредитні плечі для символу.
+        """
+        try:
+            brackets = await self.client.futures_leverage_bracket(symbol=symbol)
+            return brackets
+        except Exception as e:
+            if "Symbol is closed" in str(e):
+                logger.warning(f"Символ {symbol} наразі закритий для торгівлі.")
+            else:
+                logger.error(f"Помилка отримання даних про кредитне плече для {symbol}: {e}")
+            return None
+
     async def get_futures_ticker(self) -> list[dict]:
         """Отримує 24-годинну статистику цін (тікери) для всіх ф'ючерсних символів."""
         try:
@@ -84,14 +98,26 @@ class BinanceClient:
             raise
 
     async def set_margin_type(self, symbol: str, margin_type: str):
-        """Встановлює тип маржі (ISOLATED або CROSSED)."""
+        """Встановлює тип маржі (ISOLATED або CROSSED), тільки якщо це необхідно."""
         try:
+            # Отримуємо інформацію про позицію, щоб перевірити поточний тип маржі
+            position_info = await self.client.futures_position_information(symbol=symbol)
+            
+            # position_information повертає список, нам потрібен перший елемент
+            if position_info:
+                current_margin_type = position_info[0].get('marginType')
+                if current_margin_type and current_margin_type.lower() == margin_type.lower():
+                    logger.debug(f"Тип маржі для {symbol} вже є {margin_type}, зміна не потрібна.")
+                    return
+
+            # Якщо тип маржі інший, змінюємо його
             await self.client.futures_change_margin_type(symbol=symbol, marginType=margin_type.upper())
-            logger.info(f"Тип маржі для {symbol} встановлено на {margin_type}")
+            logger.info(f"Тип маржі для {symbol} успішно змінено на {margin_type}.")
+
         except Exception as e:
-            # Ігноруємо помилку, якщо тип маржі вже встановлено
             if "No need to change margin type" in str(e):
-                logger.warning(f"Тип маржі для {symbol} вже є {margin_type}.")
+                # Це не повинно відбуватися з новою логікою, але залишаємо як запобіжник
+                logger.debug(f"Тип маржі для {symbol} вже є {margin_type.upper()}.")
             else:
                 logger.error(f"Помилка зміни типу маржі для {symbol}: {e}")
                 raise

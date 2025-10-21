@@ -36,8 +36,12 @@ class SymbolScreener:
             # Фільтруємо тільки безстрокові контракти до USDT, що не є "сміттєвими"
             usdt_perpetual_tickers = [
                 ticker for ticker in all_tickers
-                if ticker['symbol'].endswith('USDT') and not ticker['symbol'].startswith('DELE')
-                   and float(ticker['quoteVolume']) > min_volume
+                if (
+                    ticker['symbol'].endswith('USDT') and
+                    not ticker['symbol'].startswith('DELE') and
+                    ticker['symbol'].isascii() and  # Ігноруємо символи з не-ASCII символами (напр. китайські)
+                    float(ticker['quoteVolume']) > min_volume
+                )
             ]
 
             # Сортуємо відфільтровані символи за обсягом в USDT (quoteVolume) по спаданню

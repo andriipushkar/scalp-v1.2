@@ -7,7 +7,7 @@ class OrderBookManager:
     Керує локальною копією біржового стакану (Order Book) для одного символу.
     
     Цей клас відповідає за:
-    1. Ініціалізацію стакану початковим "знімком" (snapshot) через REST API.
+    1. Ініціалізацію стакану початковим \"знімком\" (snapshot) через REST API.
     2. Синхронізацію стакану в реальному часі за допомогою повідомлень з WebSocket-потоку.
     3. Надання доступу до даних про заявки на купівлю (bids) та продаж (asks).
     """
@@ -19,10 +19,9 @@ class OrderBookManager:
             symbol (str): Торговий символ (напр., 'BTCUSDT').
         """
         self.symbol = symbol
-        # Використовуємо pandas DataFrame для ефективної роботи з даними стакану.
-        # Індексом є ціна, що дозволяє швидко оновлювати та знаходити дані.
-        self._bids = pd.DataFrame(columns=['price', 'quantity']).set_index('price')
-        self._asks = pd.DataFrame(columns=['price', 'quantity']).set_index('price')
+        # Створюємо порожні DataFrame з правильною структурою: індекс 'price' та колонка 'quantity'
+        self._bids = pd.DataFrame([], columns=['price', 'quantity']).set_index('price')
+        self._asks = pd.DataFrame([], columns=['price', 'quantity']).set_index('price')
         self.last_update_id = 0
         self._event_buffer = []  # Буфер для подій, що надходять під час ініціалізації
         self.is_initialized = False # Прапорець, що показує, чи стакан вже синхронізовано
@@ -32,13 +31,9 @@ class OrderBookManager:
         """Ініціалізує стакан початковим знімком, отриманим через REST API."""
         self.last_update_id = snapshot['lastUpdateId']
         
-        # Створюємо DataFrame для bids (заявки на купівлю)
-        bids_data = [{'price': float(p), 'quantity': float(q)} for p, q in snapshot['bids']]
-        self._bids = pd.DataFrame(bids_data).set_index('price')
-        
-        # Створюємо DataFrame для asks (заявки на продаж)
-        asks_data = [{'price': float(p), 'quantity': float(q)} for p, q in snapshot['asks']]
-        self._asks = pd.DataFrame(asks_data).set_index('price')
+        # Ефективно створюємо DataFrame одразу з даних, конвертуючи типи
+        self._bids = pd.DataFrame(snapshot['bids'], columns=['price', 'quantity'], dtype=float).set_index('price')
+        self._asks = pd.DataFrame(snapshot['asks'], columns=['price', 'quantity'], dtype=float).set_index('price')
         
         logger.info(f"[{self.symbol}] Знімок стакану ініціалізовано. lastUpdateId: {self.last_update_id}")
 

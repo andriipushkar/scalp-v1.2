@@ -1,404 +1,51 @@
-# Profile: Scalping
-# INFO: These are auto-generated placeholder settings based on the 'scalping' profile.
-# For optimal performance, each symbol requires individual analysis and backtesting.
+default:
+  # --- Фільтри Індикаторів (налаштування для скальпінгу) ---
+  ema_filter_enabled: true
+  ema_period: 50 # Використовуємо коротшу EMA для реакції на локальні тренди, а не глобальні
+  ema_timeframe: '5m'
+
+  rsi_filter_enabled: true
+  rsi_period: 14
+  rsi_timeframe: '3m' # Короткий таймфрейм для швидкої оцінки імпульсу
+  rsi_long_threshold: 70  # Дозволяємо вхід, навіть якщо ринок вже трохи розігрітий
+  rsi_short_threshold: 30 # Дозволяємо вхід, навіть якщо ринок вже трохи охолов
+
+  # --- Пошук "Стінок" (більш чутливі налаштування) ---
+  wall_volume_multiplier: 7 # Робить стратегію більш чутливою до менших стінок
+  activation_distance_ticks: 12 # Ціна повинна бути досить близько до стінки
+  max_spread_bps: 3 # Критично для скальпінгу, щоб спред був мінімальним
+  min_wall_volume: 7500 # Знижено для більшої кількості сигналів по менш ліквідним парам
+
+  # --- Управління Ордерами (швидкий вхід/вихід) ---
+  entry_offset_ticks: 1 # Входимо близько до стінки
+  stop_loss_percent: 0.5 # Дуже жорсткий стоп-лос для мінімізації збитків
+  initial_tp_min_search_percent: 0.4 # Мінімальна ціль по прибутку
+  initial_tp_search_percent: 0.8 # Максимальна ціль по прибутку
+
+  # --- Управління Позицією (агресивне) ---
+  trailing_sl_distance_percent: 0.2 # Дуже близький трейлінг-стоп для фіксації мікро-прибутку
+  pre_emptive_close_threshold_mult: 1.5 # Більш чутливе закриття при зміні тиску в стакані
+
+# --- Специфічні налаштування для символів (приклади для скальпінгу) ---
+# Тут ви можете перевизначити будь-який з параметрів default для конкретної монети
 symbol_specific:
   BTCUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
+    min_wall_volume: 500000 # Для BTC все ще потрібен великий обсяг
+    max_spread_bps: 1.0 # Для BTC спред має бути мінімальним
+    stop_loss_percent: 0.3
+    initial_tp_search_percent: 0.6
+    trailing_sl_distance_percent: 0.15
+
   ETHUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
+    min_wall_volume: 250000
     max_spread_bps: 1.5
+    stop_loss_percent: 0.4
+    initial_tp_search_percent: 0.7
+    trailing_sl_distance_percent: 0.2
+
+  # Приклад для більш волатильного активу
   SOLUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
+    max_spread_bps: 4
+    stop_loss_percent: 0.6
+    initial_tp_search_percent: 1.0
     trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  BNBUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  XRPUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  DOGEUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  ADAUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  AVAXUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  DOTUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  LINKUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  LTCUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  BCHUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  ATOMUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  NEARUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  UNIUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  TRXUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  XLMUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  ETCUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  AAVEUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  FTMUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  EGLDUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  HBARUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  MANAUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  SANDUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  THETAUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  VETUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  FILUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  XMRUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  ZECUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  APEUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  GMTUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  AXSUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  KSMUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  RUNEUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  SNXUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  CRVUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  GALAUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  WAVESUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  MKRUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  COMPUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  ALGOUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  SUSHIUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  YFIUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  1INCHUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  GRTUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  CHZUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  ENJUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  ICPUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  ARUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5
-  KAVAUSDT:
-    entry_offset_ticks: 10
-    stop_loss_percent: 0.8
-    initial_tp_search_percent: 1.2
-    trailing_sl_distance_percent: 0.3
-    pre_emptive_close_threshold_mult: 3.5
-    wall_volume_multiplier: 10
-    max_spread_bps: 1.5

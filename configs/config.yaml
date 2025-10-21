@@ -3,26 +3,7 @@
 
 # Список символів для моніторингу та торгівлі.
 # Якщо список порожній, бот спробує завантажити всі доступні символи з біржі.
-symbols:
-  - BTCUSDT
-  - ETHUSDT
-  - SOLUSDT
-  - BNBUSDT
-  - XRPUSDT
-  - ADAUSDT
-  - DOGEUSDT
-  - AVAXUSDT
-  - DOTUSDT
-  - LTCUSDT
-  - LINKUSDT
-  - UNIUSDT
-  - ATOMUSDT
-  - FILUSDT
-  - ETCUSDT
-  - APTUSDT
-  - ARBUSDT
-  - OPUSDT
-  - SUIUSDT
+symbols: []
 
 # Список стратегій, які бот буде запускати.
 # Назви повинні відповідати назвам класів стратегій.
@@ -39,5 +20,5 @@ trading_parameters:
   fee_pct: 0.0004
   leverage: 10
   margin_type: "ISOLATED"
-  max_active_trades: 10
-  max_concurrent_symbols: 20
+  max_active_trades: 1
+  max_concurrent_symbols: 50
