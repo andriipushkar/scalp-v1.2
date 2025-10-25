@@ -5,13 +5,14 @@ from .base_strategy import BaseStrategy
 from core.orderbook_manager import OrderBookManager
 from loguru import logger
 import pandas as pd
+import pandas_ta as ta
 
 if TYPE_CHECKING:
     from core.binance_client import BinanceClient
 
 class DynamicOrderbookStrategy(BaseStrategy):
     """
-    Стратегія, що використовує аналіз стакану, доповнений фільтрами EMA та RSI.
+    Стратегія, що використовує аналіз стакану, доповнений фільтрами EMA, RSI та динамічним SL/TP на основі ATR.
     """
 
     def __init__(self, strategy_id: str, symbol: str, params: dict):
@@ -33,6 +34,10 @@ class DynamicOrderbookStrategy(BaseStrategy):
         self.rsi_short_threshold = params.get('rsi_short_threshold', 40)
 
         # SL/TP and adjustment params
+        self.use_atr_sl_tp = params.get("use_atr_sl_tp", False)
+        self.atr_period = params.get("atr_period", 14)
+        self.atr_sl_multiplier = params.get("atr_sl_multiplier", 1.5)
+        self.atr_tp_multiplier = params.get("atr_tp_multiplier", 2.0)
         self.stop_loss_percent = params.get("stop_loss_percent", 0.3)
         self.initial_tp_min_search_percent = params.get("initial_tp_min_search_percent", 1.0)
         self.initial_tp_search_percent = params.get("initial_tp_search_percent", 0.5)
@@ -49,16 +54,13 @@ class DynamicOrderbookStrategy(BaseStrategy):
         return tick if pd.notna(tick) and tick > 0 else 0.01
 
     def _calculate_rsi(self, series: pd.Series, period: int) -> float:
-        delta = series.diff()
-        gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
-        loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
-        rs = gain / loss
-        rsi = 100 - (100 / (1 + rs))
-        return rsi.iloc[-1]
+        return ta.rsi(series, length=period).iloc[-1]
 
     def _calculate_ema(self, series: pd.Series, period: int) -> float:
-        ema = series.ewm(span=period, adjust=False).mean()
-        return ema.iloc[-1]
+        return ta.ema(series, length=period).iloc[-1]
+
+    def _calculate_atr(self, high: pd.Series, low: pd.Series, close: pd.Series, period: int) -> float:
+        return ta.atr(high=high, low=low, close=close, length=period).iloc[-1]
 
     async def _get_historical_data(self, symbol: str, timeframe: str, limit: int, binance_client: 'BinanceClient') -> pd.DataFrame | None:
         cache_key = f"{symbol}_{timeframe}_{limit}"
@@ -72,7 +74,8 @@ class DynamicOrderbookStrategy(BaseStrategy):
             df = pd.DataFrame(klines, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume', 'close_time',
                                              'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume',
                                              'taker_buy_quote_asset_volume', 'ignore'])
-            df['close'] = pd.to_numeric(df['close'])
+            for col in ['open', 'high', 'low', 'close', 'volume']:
+                df[col] = pd.to_numeric(df[col])
             self.klines_cache[cache_key] = {'timestamp': now, 'data': df}
             return df
         except Exception as e:
@@ -126,13 +129,9 @@ class DynamicOrderbookStrategy(BaseStrategy):
 
         logger.info(f"[{self.strategy_id}] Потенційний сигнал від стіни: {wall_signal}. Перевірка фільтрів...")
 
-        # Якщо всі фільтри вимкнені, повертаємо сигнал одразу
-        if not self.ema_filter_enabled and not self.rsi_filter_enabled:
-            return wall_signal
-
         # --- Отримання даних та розрахунок індикаторів ---
-        limit = max(self.ema_period, self.rsi_period) + 1
-        timeframe = self.ema_timeframe if self.ema_filter_enabled else self.rsi_timeframe
+        limit = max(self.ema_period, self.rsi_period, self.atr_period if self.use_atr_sl_tp else 0) + 1
+        timeframe = self.ema_timeframe # Assuming all indicators use the same timeframe for simplicity
         klines_df = await self._get_historical_data(self.symbol, timeframe, limit, binance_client)
         if klines_df is None or klines_df.empty:
             logger.warning(f"[{self.strategy_id}] Не вдалося отримати дані для фільтрів. Сигнал пропущено.")
@@ -160,54 +159,55 @@ class DynamicOrderbookStrategy(BaseStrategy):
                 logger.debug(f"[{self.strategy_id}] Сигнал SHORT відхилено фільтром RSI. RSI({self.rsi_period}) {rsi_value:.2f} < {self.rsi_short_threshold}")
                 return None
 
+        # --- ATR Calculation for SL/TP ---
+        if self.use_atr_sl_tp:
+            atr_value = self._calculate_atr(klines_df['high'], klines_df['low'], klines_df['close'], self.atr_period)
+            wall_signal['atr'] = atr_value
+
         logger.success(f"[{self.strategy_id}] Сигнал {wall_signal['signal_type']} пройшов усі фільтри.")
         return wall_signal
 
     def calculate_sl_tp(self, entry_price: float, signal_type: str, order_book_manager: OrderBookManager, **kwargs) -> dict:
-        if signal_type == 'Long':
-            stop_loss = entry_price * (1 - self.stop_loss_percent / 100)
-            min_tp_price = entry_price * (1 + self.initial_tp_min_search_percent / 100)
-            take_profit = entry_price * (1 + self.initial_tp_search_percent / 100)
-        elif signal_type == 'Short':
-            stop_loss = entry_price * (1 + self.stop_loss_percent / 100)
-            min_tp_price = entry_price * (1 - self.initial_tp_search_percent / 100)
-            take_profit = entry_price * (1 - self.initial_tp_min_search_percent / 100)
+        atr = kwargs.get('atr')
+        if self.use_atr_sl_tp and atr:
+            if signal_type == 'Long':
+                stop_loss = entry_price - (atr * self.atr_sl_multiplier)
+                take_profit = entry_price + (atr * self.atr_tp_multiplier)
+            elif signal_type == 'Short':
+                stop_loss = entry_price + (atr * self.atr_sl_multiplier)
+                take_profit = entry_price - (atr * self.atr_tp_multiplier)
+            else:
+                return {}
         else:
-            return {}
+            if signal_type == 'Long':
+                stop_loss = entry_price * (1 - self.stop_loss_percent / 100)
+                take_profit = entry_price * (1 + self.initial_tp_search_percent / 100)
+            elif signal_type == 'Short':
+                stop_loss = entry_price * (1 + self.stop_loss_percent / 100)
+                take_profit = entry_price * (1 - self.initial_tp_search_percent / 100)
+            else:
+                return {}
         return {'stop_loss': stop_loss, 'take_profit': take_profit}
 
     def analyze_and_adjust(self, position: dict, orderbook_manager: OrderBookManager) -> dict | None:
         side = position.get("side")
-        entry_price = position.get("entry_price")
-        current_sl = position.get("stop_loss")
+        if not side:
+            return None
+
+        current_price = orderbook_manager.get_best_bid() if side == "Long" else orderbook_manager.get_best_ask()
+        if not current_price:
+            return None
+
+        asks = orderbook_manager.get_asks()
+        bids = orderbook_manager.get_bids()
+        price_range = current_price * 0.005
+        relevant_asks_vol = asks[asks.index < current_price + price_range]['quantity'].sum()
+        relevant_bids_vol = bids[bids.index > current_price - price_range]['quantity'].sum()
 
         if side == "Long":
-            current_price = orderbook_manager.get_best_bid()
-            if not current_price:
-                return None
-
-
-
-            asks = orderbook_manager.get_asks()
-            bids = orderbook_manager.get_bids()
-            price_range = current_price * 0.005
-            relevant_asks_vol = asks[asks.index < current_price + price_range]['quantity'].sum()
-            relevant_bids_vol = bids[bids.index > current_price - price_range]['quantity'].sum()
             if relevant_bids_vol > 0 and (relevant_asks_vol / relevant_bids_vol) > self.pre_emptive_close_threshold_mult:
                 return {"command": "CLOSE_POSITION", "reason": "Ask pressure detected"}
-
         elif side == "Short":
-            current_price = orderbook_manager.get_best_ask()
-            if not current_price:
-                return None
-
-
-
-            asks = orderbook_manager.get_asks()
-            bids = orderbook_manager.get_bids()
-            price_range = current_price * 0.005
-            relevant_asks_vol = asks[asks.index < current_price + price_range]['quantity'].sum()
-            relevant_bids_vol = bids[bids.index > current_price - price_range]['quantity'].sum()
             if relevant_asks_vol > 0 and (relevant_bids_vol / relevant_asks_vol) > self.pre_emptive_close_threshold_mult:
                 return {"command": "CLOSE_POSITION", "reason": "Bid pressure detected"}
 

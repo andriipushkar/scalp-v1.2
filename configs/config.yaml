@@ -6,17 +6,17 @@
 symbols: []
 
 # Список стратегій, які бот буде запускати.
-# Назви повинні відповідати назвам класів стратегій.
+# Назви повинні відповідати назвам класів стратегій. DynamicOrderbookStrategy, EmaTrendFollowingStrategy
 enabled_strategies:
-  - DynamicOrderbookStrategy
+  - EmaTrendFollowingStrategy
 
 # Шляхи до файлів з налаштуваннями для кожної стратегії.
 strategy_settings:
-  DynamicOrderbookStrategy: "configs/strategies/dynamic_orderbook.yaml"
+  EmaTrendFollowingStrategy: "configs/strategies/ema_trend_following.yaml"
 
 # Загальні параметри торгівлі та ризик-менеджменту.
 trading_parameters:
-  margin_per_trade_pct: 0.05
+  margin_per_trade_pct: 0.1
   fee_pct: 0.0004
   leverage: 10
   margin_type: "ISOLATED"

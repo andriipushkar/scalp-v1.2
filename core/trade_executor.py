@@ -37,6 +37,7 @@ class TradeExecutor:
         self.qty_precision = qty_precision
         self.tick_size = tick_size
         self.pending_symbols = pending_symbols
+        self.last_kline_processed_timestamp = 0 # Додаємо для відстеження останнього обробленого часу K-ліній
         logger.info(f"[{self.strategy_id}] Ініціалізовано TradeExecutor.")
 
     async def start_monitoring(self):
@@ -51,7 +52,20 @@ class TradeExecutor:
                 if position:
                     await self._handle_position_adjustment(position)
                 else:
-                    await self._check_and_open_position()
+                    kline_key = f"{self.symbol}_{self.strategy.kline_interval}"
+                    klines_df = self.orchestrator.kline_data_cache.get(kline_key)
+                    
+                    if klines_df is not None and not klines_df.empty:
+                        latest_kline_close_time = klines_df.iloc[-1]['close_time']
+                        # Перевіряємо, чи є нові K-лінії для обробки
+                        if latest_kline_close_time > self.last_kline_processed_timestamp:
+                            logger.debug(f"[{self.strategy_id}] Нові K-лінії доступні. Обробка сигналу.")
+                            await self._check_and_open_position()
+                            self.last_kline_processed_timestamp = latest_kline_close_time
+                        else:
+                            logger.debug(f"[{self.strategy_id}] K-лінії не оновлювалися. Пропуск перевірки сигналу.")
+                    else:
+                        logger.debug(f"[{self.strategy_id}] K-лінії ще не доступні в кеші. Пропуск перевірки сигналу.")
             except Exception as e:
                 logger.error(f"[{self.strategy_id}] Критична помилка в циклі моніторингу: {e}", exc_info=True)
                 await asyncio.sleep(5)
@@ -65,7 +79,13 @@ class TradeExecutor:
         if self.position_manager.get_positions_count() >= self.max_active_trades:
             return
 
-        signal = await self.strategy.check_signal(self.orderbook_manager, self.binance_client)
+        kline_key = f"{self.symbol}_{self.strategy.kline_interval}"
+        klines_df = self.orchestrator.kline_data_cache.get(kline_key)
+        if klines_df is None or klines_df.empty:
+            logger.warning(f"[{self.strategy_id}] K-лінії для {self.symbol} ({self.strategy.kline_interval}) ще не доступні в кеші.")
+            return
+
+        signal = await self.strategy.check_signal(self.orderbook_manager, self.binance_client, dataframe=klines_df)
         if not signal:
             return
 
@@ -106,7 +126,9 @@ class TradeExecutor:
             self.orchestrator.pending_sl_tp[client_order_id] = {
                 'signal_type': signal['signal_type'],
                 'strategy_id': self.strategy_id,
-                'quantity': quantity
+                'quantity': quantity,
+                'atr': signal.get('atr'),  # Зберігаємо ATR
+                'dataframe': signal.get('dataframe') # Зберігаємо dataframe
             }
 
             order_params = {

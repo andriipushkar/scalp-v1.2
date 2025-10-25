@@ -1,0 +1,27 @@
+default:
+  # --- Параметри індикаторів ---
+  fast_ema_period: 20       # Період швидкої EMA
+  slow_ema_period: 50       # Період повільної EMA
+  rsi_period: 14            # Період RSI
+  volume_ma_period: 20      # Період ковзної середньої для обсягу
+  atr_period: 14            # Період ATR
+
+  # --- Таймфрейм для аналізу ---
+  kline_interval: '15m'     # Інтервал свічок (напр., '5m', '15m', '1h', '4h')
+
+  # --- Управління ризиками ---
+  sl_atr_multiplier: 1.5    # Множник ATR для розрахунку Stop Loss
+  rr_ratio: 2.0             # Співвідношення ризик/прибуток (Take Profit = Risk * rr_ratio)
+
+  # --- Додаткові фільтри та методи ---
+  use_candle_patterns: true # true/false - чи використовувати свічкові патерни (Engulfing) для підтвердження сигналу
+  tp_method: 'rr_ratio'     # Метод розрахунку Take Profit: 'rr_ratio' або 'local_extremum'
+  use_rsi_filter:  true     # true/false - чи використовувати RSI для фільтрації сигналів
+  use_volume_filter: true   # true/false - чи використовувати обсяг для фільтрації сигналів
+
+# --- Специфічні налаштування для символів ---
+# Тут ви можете перевизначити будь-який з параметрів default для конкретної монети.
+# Приклад:
+# BTCUSDT:
+#   kline_interval: '1h'
+#   sl_atr_multiplier: 2.0

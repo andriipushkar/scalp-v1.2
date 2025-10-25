@@ -1,6 +1,7 @@
 import asyncio
 import yaml
 import os
+import pandas as pd
 from loguru import logger
 from binance import BinanceSocketManager
 from binance.enums import *
@@ -44,6 +45,7 @@ class BotOrchestrator:
         # Словники для відстеження стану ордерів
         self.pending_symbols = set()
         self.pending_sl_tp = {}
+        self.kline_data_cache: dict[str, pd.DataFrame] = {}
 
     def _load_yaml(self, path: str) -> dict:
         """Допоміжна функція для завантаження YAML файлів."""
@@ -177,7 +179,9 @@ class BotOrchestrator:
                 entry_price=actual_entry_price, 
                 signal_type=signal_type,
                 order_book_manager=executor.orderbook_manager,
-                tick_size=executor.tick_size
+                tick_size=executor.tick_size,
+                atr=pending_info.get('atr'),
+                dataframe=pending_info.get('dataframe')
             )
             if not sl_tp_prices:
                 logger.error(f"[{symbol}] Не вдалося розрахувати SL/TP. Аварійне закриття.")
@@ -230,6 +234,65 @@ class BotOrchestrator:
             del self.pending_sl_tp[client_order_id]
             if symbol in self.pending_symbols:
                 self.pending_symbols.remove(symbol)
+
+    async def _periodic_kline_fetcher(self):
+        """
+        Періодично отримує K-лінії для всіх активних символів та кешує їх.
+        """
+        logger.info("Запуск задачі періодичного отримання K-ліній...")
+        # Збираємо унікальні пари (символ, інтервал) для запитів
+        kline_requests = {} # {(symbol, interval): kline_limit}
+        for executor in self.trade_executors:
+            symbol = executor.strategy.symbol
+            interval = executor.strategy.kline_interval
+            limit = executor.strategy.kline_limit
+            kline_requests[(symbol, interval)] = max(kline_requests.get((symbol, interval), 0), limit)
+
+        while True:
+            start_time = asyncio.get_event_loop().time()
+            
+            for (symbol, interval), limit in kline_requests.items():
+                try:
+                    klines = await self.binance_client.client.futures_klines(symbol=symbol, interval=interval, limit=limit)
+                    if klines:
+                        df = pd.DataFrame(klines, columns=['open_time', 'open', 'high', 'low', 'close', 'volume', 'close_time',
+                                                           'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume',
+                                                           'taker_buy_quote_asset_volume', 'ignore'])
+                        for col in ['open', 'high', 'low', 'close', 'volume']:
+                            df[col] = pd.to_numeric(df[col])
+                        self.kline_data_cache[f"{symbol}_{interval}"] = df
+                        logger.debug(f"Оновлено K-лінії для {symbol} ({interval}).")
+                    else:
+                        logger.warning(f"Не отримано K-ліній для {symbol} ({interval}).")
+                except Exception as e:
+                    logger.error(f"Помилка отримання K-ліній для {symbol} ({interval}): {e}")
+                await asyncio.sleep(0.1) # Невелика затримка між запитами, щоб уникнути бан-ліміту
+
+            # Розраховуємо час до наступного повного циклу
+            # Це спрощена логіка, яка не враховує точний час закриття свічок
+            # Для більш точного вирівнювання потрібно використовувати час закриття свічок
+            # і чекати до наступного закриття
+            end_time = asyncio.get_event_loop().time()
+            elapsed_time = end_time - start_time
+            
+            # Знаходимо найменший інтервал серед усіх стратегій, щоб чекати його
+            min_interval_seconds = float('inf')
+            for executor in self.trade_executors:
+                interval_str = executor.strategy.kline_interval
+                # Перетворюємо інтервал в секунди (напр., '1m' -> 60, '15m' -> 900)
+                if interval_str.endswith('m'):
+                    seconds = int(interval_str[:-1]) * 60
+                elif interval_str.endswith('h'):
+                    seconds = int(interval_str[:-1]) * 3600
+                elif interval_str.endswith('d'):
+                    seconds = int(interval_str[:-1]) * 86400
+                else:
+                    seconds = 60 # За замовчуванням 1 хвилина
+                min_interval_seconds = min(min_interval_seconds, seconds)
+
+            sleep_duration = max(0, min_interval_seconds - elapsed_time)
+            logger.debug(f"Наступне оновлення K-ліній через {sleep_duration:.2f} секунд.")
+            await asyncio.sleep(sleep_duration)
 
     async def _periodic_reconcile(self):
         """
@@ -334,5 +397,6 @@ class BotOrchestrator:
             market_data_task = asyncio.create_task(self._market_data_listener(list(set(market_data_streams))))
             monitoring_tasks = [asyncio.create_task(ex.start_monitoring()) for ex in self.trade_executors]
             reconciliation_task = asyncio.create_task(self._periodic_reconcile())
+            kline_fetcher_task = asyncio.create_task(self._periodic_kline_fetcher())
             
-            await asyncio.gather(user_data_task, market_data_task, reconciliation_task, *monitoring_tasks)
+            await asyncio.gather(user_data_task, market_data_task, reconciliation_task, kline_fetcher_task, *monitoring_tasks)
