@@ -112,6 +112,101 @@ nohup python main.py > quantum_trader.log 2>&1 &
         journalctl -u quantum_trader -f
         ```
 
+### Спосіб 3: Docker (рекомендований для портативності)
+
+Docker дозволяє "запакувати" додаток з усім його оточенням в ізольований контейнер. Це забезпечує однакову поведінку вашого бота на будь-якому сервері, де встановлено Docker.
+
+#### 1. Створення файлу `.dockerignore`
+
+Щоб уникнути копіювання непотрібних файлів в образ, створіть у корені проекту файл `.dockerignore` з таким вмістом:
+
+```
+# Git
+.git
+.gitignore
+
+# Python
+.venv
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.idea/
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Pytest
+.pytest_cache/
+```
+
+#### 2. Створення файлу `Dockerfile`
+
+У корені проекту створіть файл `Dockerfile` з таким вмістом:
+
+```dockerfile
+# Використовуємо офіційний образ Python
+FROM python:3.10-slim
+
+# Встановлюємо робочу директорію в контейнері
+WORKDIR /app
+
+# Копіюємо файл залежностей та встановлюємо їх
+# Це робиться окремим кроком для кешування Docker
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копіюємо решту коду додатку
+COPY . .
+
+# Команда для запуску бота при старті контейнера
+CMD ["python", "main.py"]
+```
+
+#### 3. Збірка та запуск
+
+1.  **Зберіть Docker образ:**
+    На вашому сервері перейдіть до директорії проекту та виконайте:
+    ```bash
+    docker build -t quantum-trader .
+    ```
+    *   `-t quantum-trader` дає образу ім'я (тег).
+    *   `.` вказує, що `Dockerfile` знаходиться в поточній директорії.
+
+2.  **Запустіть Docker контейнер:**
+    ```bash
+    docker run -d \
+      --name quantum-trader-container \
+      --restart always \
+      -e BINANCE_API_KEY="your_api_key_here" \
+      -e BINANCE_API_SECRET="your_api_secret_here" \
+      quantum-trader
+    ```
+    *   `-d`: Запуск у фоновому режимі.
+    *   `--name quantum-trader-container`: Ім'я контейнера.
+    *   `--restart always`: Автоматично перезапускати контейнер.
+    *   `-e ...`: Передача API ключів як змінних середовища.
+    *   `quantum-trader`: Назва образу для запуску.
+
+#### 4. Керування контейнером
+
+*   **Перегляд логів:**
+    ```bash
+    docker logs -f quantum-trader-container
+    ```
+*   **Зупинка контейнера:**
+    ```bash
+    docker stop quantum-trader-container
+    ```
+*   **Видалення контейнера:**
+    ```bash
+    docker rm quantum-trader-container
+    ```
+
 ## 4. Моніторинг
 
-Незалежно від способу запуску, регулярно перевіряйте файли логів (`quantum_trader.log` або через `journalctl`), щоб переконатися, що бот працює коректно і не виникає помилок.
+Незалежно від способу запуску, регулярно перевіряйте файли логів (`quantum_trader.log`, `journalctl` або `docker logs`), щоб переконатися, що бот працює коректно і не виникає помилок.
