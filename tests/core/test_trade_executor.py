@@ -51,6 +51,8 @@ def mock_strategy():
     strategy.strategy_id = "TestStrategy_BTCUSDT"
     strategy.symbol = "BTCUSDT"
     strategy.params = {}
+    strategy.kline_interval = '15m' # Додаємо для тестування analyze_and_adjust
+    strategy.analyze_and_adjust = AsyncMock() # analyze_and_adjust тепер асинхронний
     return strategy
 
 @pytest.fixture
@@ -87,6 +89,8 @@ async def test_check_and_open_position_max_trades_reached(trade_executor: TradeE
 async def test_check_and_open_position_signal_found(trade_executor: TradeExecutor):
     """ТЕСТ: Якщо є сигнал, має викликатись _open_position."""
     trade_executor.strategy.check_signal.return_value = {"signal_type": "Long", "wall_price": 100.0}
+    trade_executor.strategy.kline_interval = '15m'
+    trade_executor.orchestrator.kline_data_cache = {'BTCUSDT_15m': pd.DataFrame({'close': [1, 2, 3], 'close_time': [1, 2, 3]})}
     trade_executor._open_position = AsyncMock() # Мокаємо внутрішній виклик
     
     await trade_executor._check_and_open_position()

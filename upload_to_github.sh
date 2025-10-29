@@ -5,7 +5,7 @@ echo "Видалення старого remote origin..."
 git remote remove origin
 
 echo "Додавання нового remote origin..."
-git remote add origin https://github.com/andriipushkar/scalp_v1a
+git remote add origin https://github.com/andriipushkar/scalp-v1
 
 echo "Перевірка нового remote..."
 git remote -v

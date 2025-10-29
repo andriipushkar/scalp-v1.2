@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
+import pandas as pd
 
 from core.orderbook_manager import OrderBookManager
 
@@ -62,7 +63,7 @@ class BaseStrategy(ABC):
         """
         pass
 
-    def analyze_and_adjust(self, position: dict, order_book_manager: OrderBookManager) -> dict | None:
+    def analyze_and_adjust(self, position: dict, order_book_manager: OrderBookManager, binance_client: 'BinanceClient', dataframe: pd.DataFrame | None = None) -> dict | None:
         """
         Опціональний метод для аналізу відкритої позиції та її можливого коригування.
         

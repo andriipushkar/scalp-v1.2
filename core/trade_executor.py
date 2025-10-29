@@ -124,7 +124,7 @@ class TradeExecutor:
                 return
 
             self.orchestrator.pending_sl_tp[client_order_id] = {
-                'signal_type': signal['signal_type'],
+                'signal_type': position['side'],
                 'strategy_id': self.strategy_id,
                 'quantity': quantity,
                 'atr': signal.get('atr'),  # Зберігаємо ATR
@@ -151,10 +151,10 @@ class TradeExecutor:
         """
         Обробляє логіку коригування для вже відкритої позиції.
         """
-        if not hasattr(self.strategy, 'analyze_and_adjust'):
-            return
+        kline_key = f"{self.symbol}_{self.strategy.kline_interval}"
+        klines_df = self.orchestrator.kline_data_cache.get(kline_key)
 
-        adjustment_command = self.strategy.analyze_and_adjust(position, self.orderbook_manager)
+        adjustment_command = await self.strategy.analyze_and_adjust(position, self.orderbook_manager, self.binance_client, klines_df)
         if not adjustment_command:
             return
 
@@ -163,6 +163,20 @@ class TradeExecutor:
         if command == "CLOSE_POSITION":
             logger.info(f"[{self.strategy_id}] Отримано команду на завчасне закриття позиції. Причина: {adjustment_command.get('reason')}")
             await self._close_position_safely(position)
+
+        elif command == "UPDATE_STOP_LOSS":
+            new_sl = round(adjustment_command.get('new_stop_loss'), self.price_precision)
+            if not new_sl:
+                return
+            
+            # Отримуємо поточний TP, щоб передати його в _adjust_sl_tp
+            current_tp = position.get('take_profit')
+            if not current_tp:
+                logger.warning(f"[{self.strategy_id}] Не вдалося отримати поточний TP для оновлення SL. Пропускаємо.")
+                return
+
+            logger.info(f"[{self.strategy_id}] Отримано команду на оновлення SL. New SL: {new_sl}")
+            await self._adjust_sl_tp(position, new_sl, current_tp)
 
         elif command == "ADJUST_TP_SL":
             new_sl = round(adjustment_command.get('stop_loss'), self.price_precision)

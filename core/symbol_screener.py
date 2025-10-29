@@ -17,7 +17,7 @@ class SymbolScreener:
         """
         self.binance_client = binance_client
 
-    async def get_top_symbols_by_volume(self, n: int = 20, min_volume: int = 100000000) -> list[str]:
+    async def get_top_symbols_by_volume(self, min_volume: int, n: int = 20) -> list[str]:
         """
         Отримує топ N символів за 24-годинним обсягом торгів в USDT.
 

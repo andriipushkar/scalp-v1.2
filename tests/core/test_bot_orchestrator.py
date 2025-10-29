@@ -101,6 +101,21 @@ async def test_start_initializes_correct_executors(MockBinanceClient, orchestrat
     mock_client.get_symbol_info.return_value = {
         'pricePrecision': 2, 'quantityPrecision': 3, 'filters': [{'tickSize': '0.01'}]
     }
+    mock_client.get_leverage_brackets.return_value = [
+        {
+            'symbol': 'BTCUSDT',
+            'brackets': [
+                {
+                    'bracket': 1,
+                    'initialLeverage': 100,
+                    'notionalCap': 10000,
+                    'notionalFloor': 0,
+                    'maintMarginRatio': 0.005,
+                    'cum': 0.0
+                }
+            ]
+        }
+    ]
     mock_client.get_futures_order_book.return_value = {
         'bids': [['60000.0', '10.0']], 
         'asks': [['60001.0', '12.0']], 
@@ -179,7 +194,9 @@ async def test_handle_filled_entry_order_places_sl_and_tp(orchestrator: BotOrche
     mock_strategy.calculate_sl_tp.assert_called_once_with(
         entry_price=61000.0, signal_type="Long",
         order_book_manager=mock_executor.orderbook_manager,
-        tick_size=mock_executor.tick_size
+        tick_size=mock_executor.tick_size,
+        atr=None,
+        dataframe=None
     )
     orchestrator.binance_client.create_stop_market_order.assert_called_once()
     orchestrator.binance_client.create_take_profit_market_order.assert_called_once()

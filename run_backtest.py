@@ -1,6 +1,6 @@
 import asyncio
 from backtesting.backtester import Backtester
-from strategies.ma_crossover_strategy import MACrossoverStrategy
+from strategies.ema_trend_following_strategy import EmaTrendFollowingStrategy
 from loguru import logger
 import sys
 
@@ -14,10 +14,16 @@ async def run_backtest():
     """
     # --- 1. Налаштування параметрів бектесту ---
     strategy_params = {
-        'fast_ma': 12,
-        'slow_ma': 26,
-        'stop_loss_pct': 0.02,
-        'take_profit_pct': 0.04
+        'fast_ema_period': 20,
+        'slow_ema_period': 50,
+        'rsi_period': 14,
+        'volume_ma_period': 20,
+        'atr_period': 14,
+        'sl_atr_multiplier': 1.5,
+        'rr_ratio': 2.0,
+        'kline_interval': '15m',
+        'tp_method': 'rr_ratio',
+        'kline_limit': 55
     }
     
     symbol = "BTCUSDT"
@@ -26,8 +32,8 @@ async def run_backtest():
     initial_balance = 10000.0
 
     # --- 2. Ініціалізація ---
-    strategy = MACrossoverStrategy(
-        strategy_id=f"MACrossover_{symbol}",
+    strategy = EmaTrendFollowingStrategy(
+        strategy_id=f"EmaTrendFollowing_{symbol}",
         symbol=symbol,
         params=strategy_params
     )

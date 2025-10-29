@@ -16,9 +16,11 @@ strategy_settings:
 
 # Загальні параметри торгівлі та ризик-менеджменту.
 trading_parameters:
-  margin_per_trade_pct: 0.1
-  fee_pct: 0.0004
-  leverage: 10
-  margin_type: "ISOLATED"
-  max_active_trades: 10
-  max_concurrent_symbols: 100
+  margin_per_trade_pct: 0.1 # Відсоток від депозиту, що використовується для однієї угоди.
+  fee_pct: 0.0004 # Комісія біржі у відсотках.
+  leverage: 10 # Кредитне плече.
+  margin_type: "ISOLATED" # Тип маржі (ISOLATED або CROSSED).
+  max_active_trades: 10 # Максимальна кількість одночасно відкритих позицій.
+  max_concurrent_symbols: 100 # Максимальна кількість символів для одночасного моніторингу.
+  screener:
+    min_volume: 50000000 # Мінімальний 24-годинний обсяг в USDT для включення символу в скринері.

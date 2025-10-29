@@ -321,8 +321,13 @@ class BotOrchestrator:
             active_symbols = self.config.get('symbols', [])
             if not active_symbols:
                 logger.info("Список символів у конфігурації порожній. Запуск скринера для вибору топ-символів...")
+                screener_config = self.trading_config.get('screener', {})
+                min_volume = screener_config.get('min_volume', 100000000)
                 screener = SymbolScreener(self.binance_client)
-                active_symbols = await screener.get_top_symbols_by_volume(n=self.trading_config.get("max_concurrent_symbols", 20))
+                active_symbols = await screener.get_top_symbols_by_volume(
+                    min_volume=min_volume,
+                    n=self.trading_config.get("max_concurrent_symbols", 20)
+                )
                 if not active_symbols:
                     logger.error("Не вдалося отримати список символів від скринера. Зупинка.")
                     return
