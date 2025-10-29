@@ -22,3 +22,6 @@ default:
   use_rsi_filter:  true    # Визначає, чи використовувати фільтр RSI.
   use_volume_filter: true  # Визначає, чи використовувати фільтр обсягу.
   use_adx_filter: true     # Визначає, чи використовувати фільтр ADX.
+  use_pullback_entry: false # Визначає, чи використовувати логіку входу на відкаті.
+  pullback_ema_type: 'fast' # Тип EMA для відкату ('fast' або 'slow').
+  pullback_tolerance_pct: 0.001 # Відсоток толерантності для відкату ціни до EMA.
