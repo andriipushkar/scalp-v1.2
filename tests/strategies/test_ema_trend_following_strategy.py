@@ -166,15 +166,12 @@ async def test_check_signal_long_signal_generated(strategy_params, mock_binance_
     mock_binance_client.client.futures_klines.return_value = df.values.tolist() # Mock klines for internal fetching
     strategy = EmaTrendFollowingStrategy("test_long_signal", "BTCUSDT", strategy_params)
 
-    df[f'EMA_{strategy.fast_ema_period}'] = df.ta.ema(length=strategy.fast_ema_period)[f'EMA_{strategy.fast_ema_period}']
-    df[f'EMA_{strategy.slow_ema_period}'] = df.ta.ema(length=strategy.slow_ema_period)[f'EMA_{strategy.slow_ema_period}']
-    df[f'RSI_{strategy.rsi_period}'] = df.ta.rsi(length=strategy.rsi_period)[f'RSI_{strategy.rsi_period}']
-    df[f'VOLUME_MA_{strategy.volume_ma_period}'] = df.ta.sma(close=df['volume'], length=strategy.volume_ma_period)[f'SMA_{strategy.volume_ma_period}']
-    df[f'ATR_{strategy.atr_period}'] = df.ta.atr(length=strategy.atr_period)[f'ATR_{strategy.atr_period}']
-    adx_data = df.ta.adx(length=strategy.adx_period)
-    df[f'ADX_{strategy.adx_period}'] = adx_data[f'ADX_{strategy.adx_period}']
-    df[f'DMP_{strategy.adx_period}'] = adx_data[f'DMP_{strategy.adx_period}']
-    df[f'DMN_{strategy.adx_period}'] = adx_data[f'DMN_{strategy.adx_period}']
+    df.ta.ema(length=strategy.fast_ema_period, append=True, col_names=(f'EMA_{strategy.fast_ema_period}',))
+    df.ta.ema(length=strategy.slow_ema_period, append=True, col_names=(f'EMA_{strategy.slow_ema_period}',))
+    df.ta.rsi(length=strategy.rsi_period, append=True, col_names=(f'RSI_{strategy.rsi_period}',))
+    df.ta.sma(close=df['volume'], length=strategy.volume_ma_period, append=True, col_names=(f'VOLUME_MA_{strategy.volume_ma_period}',))
+    df.ta.atr(length=strategy.atr_period, append=True, col_names=(f'ATR_{strategy.atr_period}',))
+    adx_data = df.ta.adx(length=strategy.adx_period, append=True, col_names=(f'ADX_{strategy.adx_period}', f'DMP_{strategy.adx_period}', f'DMN_{strategy.adx_period}', f'ADXR_{strategy.adx_period}'))
     df.dropna(inplace=True)
 
     # Force the conditions to be met on the last two candles
@@ -208,15 +205,12 @@ async def test_check_signal_short_signal_generated(strategy_params, mock_binance
     mock_binance_client.client.futures_klines.return_value = df.values.tolist() # Mock klines for internal fetching
     strategy = EmaTrendFollowingStrategy("test_short_signal", "BTCUSDT", strategy_params)
 
-    df[f'EMA_{strategy.fast_ema_period}'] = df.ta.ema(length=strategy.fast_ema_period)[f'EMA_{strategy.fast_ema_period}']
-    df[f'EMA_{strategy.slow_ema_period}'] = df.ta.ema(length=strategy.slow_ema_period)[f'EMA_{strategy.slow_ema_period}']
-    df[f'RSI_{strategy.rsi_period}'] = df.ta.rsi(length=strategy.rsi_period)[f'RSI_{strategy.rsi_period}']
-    df[f'VOLUME_MA_{strategy.volume_ma_period}'] = df.ta.sma(close=df['volume'], length=strategy.volume_ma_period)[f'SMA_{strategy.volume_ma_period}']
-    df[f'ATR_{strategy.atr_period}'] = df.ta.atr(length=strategy.atr_period)[f'ATR_{strategy.atr_period}']
-    adx_data = df.ta.adx(length=strategy.adx_period)
-    df[f'ADX_{strategy.adx_period}'] = adx_data[f'ADX_{strategy.adx_period}']
-    df[f'DMP_{strategy.adx_period}'] = adx_data[f'DMP_{strategy.adx_period}']
-    df[f'DMN_{strategy.adx_period}'] = adx_data[f'DMN_{strategy.adx_period}']
+    df.ta.ema(length=strategy.fast_ema_period, append=True, col_names=(f'EMA_{strategy.fast_ema_period}',))
+    df.ta.ema(length=strategy.slow_ema_period, append=True, col_names=(f'EMA_{strategy.slow_ema_period}',))
+    df.ta.rsi(length=strategy.rsi_period, append=True, col_names=(f'RSI_{strategy.rsi_period}',))
+    df.ta.sma(close=df['volume'], length=strategy.volume_ma_period, append=True, col_names=(f'VOLUME_MA_{strategy.volume_ma_period}',))
+    df.ta.atr(length=strategy.atr_period, append=True, col_names=(f'ATR_{strategy.atr_period}',))
+    adx_data = df.ta.adx(length=strategy.adx_period, append=True, col_names=(f'ADX_{strategy.adx_period}', f'DMP_{strategy.adx_period}', f'DMN_{strategy.adx_period}', f'ADXR_{strategy.adx_period}'))
     df.dropna(inplace=True)
     
     # Force the conditions to be met on the last two candles
@@ -247,22 +241,12 @@ async def test_check_signal_adx_filter_active_no_signal_low_adx(strategy_params,
     """Test that no signal is generated when ADX is below the threshold."""
     strategy_params['adx_threshold'] = 25
     strategy_params['use_adx_filter'] = True
-    strategy = EmaTrendFollowingStrategy("test_adx_low", "BTCUSDT", strategy_params)
-
-    df = create_klines_data(100, count=200, trend='none') # Enough data for ADX
-    mock_binance_client.client.futures_klines.return_value = df.values.tolist() # Mock klines for internal fetching
-
-    for col in ['open', 'high', 'low', 'close', 'volume']:
-        df[col] = pd.to_numeric(df[col])
-    df[f'EMA_{strategy.fast_ema_period}'] = df.ta.ema(length=strategy.fast_ema_period)
-    df[f'EMA_{strategy.slow_ema_period}'] = df.ta.ema(length=strategy.slow_ema_period)
-    df[f'RSI_{strategy.rsi_period}'] = df.ta.rsi(length=strategy.rsi_period)
-    df[f'VOLUME_MA_{strategy.volume_ma_period}'] = df.ta.sma(close=df['volume'], length=strategy.volume_ma_period)
-    df[f'ATR_{strategy.atr_period}'] = df.ta.atr(length=strategy.atr_period)
-    adx_data = df.ta.adx(length=strategy.adx_period)
-    df[f'ADX_{strategy.adx_period}'] = adx_data[f'ADX_{strategy.adx_period}']
-    df[f'DMP_{strategy.adx_period}'] = adx_data[f'DMP_{strategy.adx_period}']
-    df[f'DMN_{strategy.adx_period}'] = adx_data[f'DMN_{strategy.adx_period}']
+    df.ta.ema(length=strategy.fast_ema_period, append=True, col_names=(f'EMA_{strategy.fast_ema_period}',))
+    df.ta.ema(length=strategy.slow_ema_period, append=True, col_names=(f'EMA_{strategy.slow_ema_period}',))
+    df.ta.rsi(length=strategy.rsi_period, append=True, col_names=(f'RSI_{strategy.rsi_period}',))
+    df.ta.sma(close=df['volume'], length=strategy.volume_ma_period, append=True, col_names=(f'VOLUME_MA_{strategy.volume_ma_period}',))
+    df.ta.atr(length=strategy.atr_period, append=True, col_names=(f'ATR_{strategy.atr_period}',))
+    adx_data = df.ta.adx(length=strategy.adx_period, append=True, col_names=(f'ADX_{strategy.adx_period}', f'DMP_{strategy.adx_period}', f'DMN_{strategy.adx_period}', f'ADXR_{strategy.adx_period}'))
     df.dropna(inplace=True)
 
     # Force signal conditions
@@ -294,15 +278,12 @@ async def test_check_signal_adx_filter_active_signal_high_adx(strategy_params, m
 
     for col in ['open', 'high', 'low', 'close', 'volume']:
         df[col] = pd.to_numeric(df[col])
-    df[f'EMA_{strategy.fast_ema_period}'] = df.ta.ema(length=strategy.fast_ema_period)
-    df[f'EMA_{strategy.slow_ema_period}'] = df.ta.ema(length=strategy.slow_ema_period)
-    df[f'RSI_{strategy.rsi_period}'] = df.ta.rsi(length=strategy.rsi_period)
-    df[f'VOLUME_MA_{strategy.volume_ma_period}'] = df.ta.sma(close=df['volume'], length=strategy.volume_ma_period)
-    df[f'ATR_{strategy.atr_period}'] = df.ta.atr(length=strategy.atr_period)
-    adx_data = df.ta.adx(length=strategy.adx_period)
-    df[f'ADX_{strategy.adx_period}'] = adx_data[f'ADX_{strategy.adx_period}']
-    df[f'DMP_{strategy.adx_period}'] = adx_data[f'DMP_{strategy.adx_period}']
-    df[f'DMN_{strategy.adx_period}'] = adx_data[f'DMN_{strategy.adx_period}']
+    df.ta.ema(length=strategy.fast_ema_period, append=True, col_names=(f'EMA_{strategy.fast_ema_period}',))
+    df.ta.ema(length=strategy.slow_ema_period, append=True, col_names=(f'EMA_{strategy.slow_ema_period}',))
+    df.ta.rsi(length=strategy.rsi_period, append=True, col_names=(f'RSI_{strategy.rsi_period}',))
+    df.ta.sma(close=df['volume'], length=strategy.volume_ma_period, append=True, col_names=(f'VOLUME_MA_{strategy.volume_ma_period}',))
+    df.ta.atr(length=strategy.atr_period, append=True, col_names=(f'ATR_{strategy.atr_period}',))
+    adx_data = df.ta.adx(length=strategy.adx_period, append=True, col_names=(f'ADX_{strategy.adx_period}', f'DMP_{strategy.adx_period}', f'DMN_{strategy.adx_period}', f'ADXR_{strategy.adx_period}'))
     df.dropna(inplace=True)
 
     # Force signal conditions

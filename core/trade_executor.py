@@ -124,7 +124,7 @@ class TradeExecutor:
                 return
 
             self.orchestrator.pending_sl_tp[client_order_id] = {
-                'signal_type': position['side'],
+                'signal_type': signal['signal_type'],
                 'strategy_id': self.strategy_id,
                 'quantity': quantity,
                 'atr': signal.get('atr'),  # Зберігаємо ATR
@@ -193,19 +193,8 @@ class TradeExecutor:
         try:
             old_sl_id = position.get('sl_order_id')
             old_tp_id = position.get('tp_order_id')
-            
-            cancellation_tasks = []
-            if old_sl_id: cancellation_tasks.append(self.binance_client.cancel_order(self.symbol, old_sl_id))
-            if old_tp_id: cancellation_tasks.append(self.binance_client.cancel_order(self.symbol, old_tp_id))
 
-            if cancellation_tasks:
-                results = await asyncio.gather(*cancellation_tasks, return_exceptions=True)
-                for i, result in enumerate(results):
-                    order_id = old_sl_id if i == 0 and old_sl_id else old_tp_id
-                    if isinstance(result, Exception) and "Unknown order sent" not in str(result):
-                        logger.error(f"[{self.strategy_id}] Неочікувана помилка при скасуванні ордеру {order_id}: {result}")
-                        return
-
+            # 1. Створюємо нові ордери SL/TP
             creation_tasks = [
                 self.binance_client.create_stop_market_order(self.symbol, side, position['quantity'], new_sl, self.price_precision, self.qty_precision),
                 self.binance_client.create_take_profit_market_order(self.symbol, side, position['quantity'], new_tp, self.price_precision, self.qty_precision)
@@ -216,11 +205,24 @@ class TradeExecutor:
             new_tp_order = order_results[1] if not isinstance(order_results[1], Exception) else None
 
             if new_sl_order and new_tp_order:
+                # 2. Якщо нові ордери успішно створені, скасовуємо старі
+                cancellation_tasks = []
+                if old_sl_id: cancellation_tasks.append(self.binance_client.cancel_order(self.symbol, old_sl_id))
+                if old_tp_id: cancellation_tasks.append(self.binance_client.cancel_order(self.symbol, old_tp_id))
+
+                if cancellation_tasks:
+                    results = await asyncio.gather(*cancellation_tasks, return_exceptions=True)
+                    for i, result in enumerate(results):
+                        order_id = old_sl_id if i == 0 and old_sl_id else old_tp_id
+                        if isinstance(result, Exception) and "Unknown order sent" not in str(result):
+                            logger.error(f"[{self.strategy_id}] Неочікувана помилка при скасуванні старого ордеру {order_id}: {result}")
+                            # Продовжуємо, оскільки нові ордери вже розміщені
+                
                 self.position_manager.update_orders(self.symbol, sl_order_id=new_sl_order['orderId'], tp_order_id=new_tp_order['orderId'])
                 logger.success(f"[{self.strategy_id}] SL/TP ордери успішно оновлено. New SL ID: {new_sl_order['orderId']}, New TP ID: {new_tp_order['orderId']}")
             else:
-                logger.warning(f"[{self.strategy_id}] Не вдалося створити один або обидва SL/TP ордери. Ініціюю закриття позиції.")
-                await self._close_position_safely(position)
+                logger.warning(f"[{self.strategy_id}] Не вдалося створити один або обидва нові SL/TP ордери. Позиція залишається захищеною старими ордерами (якщо вони були).")
+                return
 
         except Exception as e:
             logger.error(f"[{self.strategy_id}] Критична помилка в процесі коригування SL/TP: {e}", exc_info=True)
