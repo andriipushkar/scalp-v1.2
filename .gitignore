@@ -1,19 +1,115 @@
-# Virtual Environment
-.venv/
-
-# Environment variables
-.env
-
-# Logs
-logs/
-
-# Python cache
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.pyc
+*.pyd
+*.pyo
+*.so
 
-# IDE files
-.idea/
+# C extensions
+*.dll
+*.so
+*.dylib
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+.coverage
+.tox/
+.nox/
+
+# Editor directories and files
 .vscode/
+.idea/
+*.swp
+*~
+.DS_Store
 
-# Reports
+# OS-specific files
+.Trash/
+Thumbs.db
+
+# Virtual environment
+venv/
+.venv/
+
+# Logs
+*.log
+logs/
+
+# Configuration files
+config.yaml
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging.local
+.env.production
+.env.development
+.env.test
+.env.staging
+
+# IDE-specific files
+.project
+.settings
+.buildpath
+
+# Jupyter Notebook files
+.ipynb_checkpoints
+
+# MyPy
+.mypy_cache/
+
+# pytest cache
+.pytest_cache/
+
+# Docker
+.dockerignore
+
+# Other
+*.bak
+*.tmp
+*.swp
+*.swo
+*.orig
+*.rej
+*.patch
+*.diff
+*.log
+*.sqlite3
+*.db
 *.csv
+*.json
+*.xml
+*.yml
+*.yaml
+*.ini
+*.cfg
+*.conf
+*.pid
+*.sock
+*.lock
+*.DS_Store
+*.localized
+.AppleDouble
+.LSOverride
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotbackup
+.apdisk
