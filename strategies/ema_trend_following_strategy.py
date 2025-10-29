@@ -39,6 +39,10 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         self.adx_threshold = self.params.get('adx_threshold', 25)
         self.use_adx_filter = self.params.get('use_adx_filter', True)
 
+        self.use_pullback_entry = self.params.get('use_pullback_entry', False)
+        self.pullback_ema_type = self.params.get('pullback_ema_type', 'fast') # 'fast' or 'slow'
+        self.pullback_tolerance_pct = self.params.get('pullback_tolerance_pct', 0.001) # 0.1%
+
         self.kline_limit = max(self.slow_ema_period, self.atr_period, self.adx_period) + 5 # Беремо трохи більше даних для розрахунків
 
         logger.info(f"[{self.strategy_id}] Ініціалізовано EmaTrendFollowingStrategy з параметрами: {self.params}")
@@ -105,6 +109,16 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         is_volume_confirmed = not self.use_volume_filter or current_candle['volume'] >= current_candle[f'VOLUME_MA_{self.volume_ma_period}']
 
         if is_golden_cross and is_upward_slope and is_momentum_strong and is_volume_confirmed:
+            if self.use_pullback_entry:
+                pullback_ema = current_candle[f'EMA_{self.fast_ema_period}'] if self.pullback_ema_type == 'fast' else current_candle[f'EMA_{self.slow_ema_period}']
+                pullback_lower_bound = pullback_ema * (1 - self.pullback_tolerance_pct)
+                pullback_upper_bound = pullback_ema * (1 + self.pullback_tolerance_pct)
+                
+                # Check if current price is within pullback range of the EMA
+                if not (pullback_lower_bound <= current_candle['close'] <= pullback_upper_bound):
+                    logger.debug(f"[{self.strategy_id}] Long сигнал відхилено: ціна не на відкаті до {self.pullback_ema_type.upper()} EMA.")
+                    return None
+
             logger.info(f"[{self.strategy_id}] Знайдено сигнал LONG для {self.symbol} по ціні {current_candle['close']:.4f}")
             return {
                 'signal_type': 'Long',
@@ -123,6 +137,16 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         is_momentum_weak = not self.use_rsi_filter or current_candle[f'RSI_{self.rsi_period}'] < 50
 
         if is_death_cross and is_downward_slope and is_momentum_weak and (not self.use_volume_filter or is_volume_confirmed):
+            if self.use_pullback_entry:
+                pullback_ema = current_candle[f'EMA_{self.fast_ema_period}'] if self.pullback_ema_type == 'fast' else current_candle[f'EMA_{self.slow_ema_period}']
+                pullback_lower_bound = pullback_ema * (1 - self.pullback_tolerance_pct)
+                pullback_upper_bound = pullback_ema * (1 + self.pullback_tolerance_pct)
+
+                # Check if current price is within pullback range of the EMA
+                if not (pullback_lower_bound <= current_candle['close'] <= pullback_upper_bound):
+                    logger.debug(f"[{self.strategy_id}] Short сигнал відхилено: ціна не на відкаті до {self.pullback_ema_type.upper()} EMA.")
+                    return None
+
             logger.info(f"[{self.strategy_id}] Знайдено сигнал SHORT для {self.symbol} по ціні {current_candle['close']:.4f}")
             return {
                 'signal_type': 'Short',
