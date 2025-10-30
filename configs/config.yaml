@@ -9,10 +9,12 @@ symbols: []
 # Назви повинні відповідати назвам класів стратегій. DynamicOrderbookStrategy, EmaTrendFollowingStrategy
 enabled_strategies:
   - EmaTrendFollowingStrategy
+  - MacdTrendFilterStrategy
 
 # Шляхи до файлів з налаштуваннями для кожної стратегії.
 strategy_settings:
   EmaTrendFollowingStrategy: "configs/strategies/ema_trend_following.yaml"
+  MacdTrendFilterStrategy: "configs/strategies/macd_trend_filter.yaml"
 
 # Загальні параметри торгівлі та ризик-менеджменту.
 trading_parameters:
@@ -21,6 +23,6 @@ trading_parameters:
   leverage: 10 # Кредитне плече.
   margin_type: "ISOLATED" # Тип маржі (ISOLATED або CROSSED).
   max_active_trades: 10 # Максимальна кількість одночасно відкритих позицій.
-  max_concurrent_symbols: 300 # Максимальна кількість символів для одночасного моніторингу.
+  max_concurrent_symbols: 100 # Максимальна кількість символів для одночасного моніторингу.
   screener:
     min_volume: 50000000 # Мінімальний 24-годинний обсяг в USDT для включення символу в скринері.

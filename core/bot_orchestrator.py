@@ -175,29 +175,33 @@ class BotOrchestrator:
                 logger.error(f"Не знайдено executor для strategy_id {strategy_id}")
                 return
 
-            sl_tp_prices = executor.strategy.calculate_sl_tp(
-                entry_price=actual_entry_price, 
-                signal_type=signal_type,
-                order_book_manager=executor.orderbook_manager,
-                tick_size=executor.tick_size,
-                atr=pending_info.get('atr'),
-                dataframe=pending_info.get('dataframe')
-            )
-            if not sl_tp_prices:
-                logger.error(f"[{symbol}] Не вдалося розрахувати SL/TP. Аварійне закриття.")
-                await self.binance_client.futures_create_order(symbol=symbol, side=SIDE_SELL if signal_type == 'Long' else SIDE_BUY, type=ORDER_TYPE_MARKET, quantity=float(order_data.get('q')))
-                return
-
-            sl_price = round(sl_tp_prices['stop_loss'], executor.price_precision)
-            tp_price = round(sl_tp_prices['take_profit'], executor.price_precision)
+            sl_price = pending_info.get('stop_loss_price')
+            tp_price = pending_info.get('take_profit_price')
             quantity = float(order_data.get('q'))
             sl_tp_side = SIDE_SELL if signal_type == "Long" else SIDE_BUY
+
+            if sl_price is None or tp_price is None:
+                logger.error(f"[{symbol}] Не вдалося отримати розраховані SL/TP ціни з pending_sl_tp. Аварійне закриття.")
+                await self.binance_client.futures_create_order(symbol=symbol, side=sl_tp_side, type=ORDER_TYPE_MARKET, quantity=quantity)
+                return
 
             try:
                 logger.info(f"[{symbol}] Виставлення ордерів SL ({sl_price}) та TP ({tp_price}).")
                 sl_order = await self.binance_client.create_stop_market_order(symbol, sl_tp_side, quantity, sl_price, executor.price_precision, executor.qty_precision)
                 tp_order = await self.binance_client.create_take_profit_market_order(symbol, sl_tp_side, quantity, tp_price, executor.price_precision, executor.qty_precision)
-                self.position_manager.set_position(symbol, signal_type, quantity, actual_entry_price, sl_price, tp_price, sl_price, sl_order['orderId'], tp_order['orderId'])
+                
+                # Оновлюємо позицію в PositionManager з ID ордерів SL/TP
+                self.position_manager.set_position(
+                    symbol=symbol,
+                    side=signal_type,
+                    quantity=quantity,
+                    entry_price=actual_entry_price,
+                    stop_loss=sl_price,
+                    take_profit=tp_price,
+                    initial_stop_loss=sl_price, # initial_stop_loss також встановлюємо як sl_price
+                    sl_order_id=sl_order['orderId'],
+                    tp_order_id=tp_order['orderId']
+                )
                 logger.success(f"[{symbol}] Позицію успішно відкрито з SL {sl_order['orderId']} та TP {tp_order['orderId']}.")
             except Exception as e:
                 logger.error(f"[{symbol}] Не вдалося виставити SL/TP. Запуск відкату позиції. Помилка: {e}")

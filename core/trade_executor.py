@@ -73,10 +73,16 @@ class TradeExecutor:
     async def _check_and_open_position(self):
         """Перевіряє умови для відкриття нової позиції та ініціює її відкриття."""
         if self.symbol in self.pending_symbols:
+            logger.debug(f"[{self.strategy_id}] Символ {self.symbol} вже знаходиться в стані очікування ордера. Пропуск.")
+            return
+        if self.position_manager.get_position_by_symbol(self.symbol):
+            logger.debug(f"[{self.strategy_id}] Для символу {self.symbol} вже існує відкрита позиція. Пропуск.")
             return
         if not self.orderbook_manager.is_initialized:
+            logger.debug(f"[{self.strategy_id}] Orderbook для {self.symbol} ще не ініціалізовано. Пропуск.")
             return
         if self.position_manager.get_positions_count() >= self.max_active_trades:
+            logger.warning(f"[{self.strategy_id}] Досягнуто максимальну кількість активних угод ({self.max_active_trades}). Пропуск.")
             return
 
         kline_key = f"{self.symbol}_{self.strategy.kline_interval}"
@@ -123,13 +129,63 @@ class TradeExecutor:
                 self.pending_symbols.remove(self.symbol)
                 return
 
+            # Отримуємо параметри SL/TP з конфігурації стратегії
+            sl_atr_multiplier = self.strategy.config.get('sl_atr_multiplier', 1.0)
+            rr_ratio = self.strategy.config.get('rr_ratio', 1.0)
+            max_sl_percentage = self.strategy.config.get('max_sl_percentage', 0.01) # За замовчуванням 1%
+
+            stop_loss_price = 0.0
+            take_profit_price = 0.0
+            initial_stop_loss = 0.0 # Зберігаємо початковий SL для трейлінгу або інших цілей
+
+            if signal.get('atr'):
+                # Розрахунок Stop Loss
+                if side == SIDE_BUY: # Long position
+                    stop_loss_price = entry_price - (signal['atr'] * sl_atr_multiplier)
+                    # Обмеження SL за максимальним відсотком
+                    max_allowed_sl_deviation = entry_price * max_sl_percentage
+                    if (entry_price - stop_loss_price) > max_allowed_sl_deviation:
+                        stop_loss_price = entry_price - max_allowed_sl_deviation
+                else: # Short position
+                    stop_loss_price = entry_price + (signal['atr'] * sl_atr_multiplier)
+                    # Обмеження SL за максимальним відсотком
+                    max_allowed_sl_deviation = entry_price * max_sl_percentage
+                    if (stop_loss_price - entry_price) > max_allowed_sl_deviation:
+                        stop_loss_price = entry_price + max_allowed_sl_deviation
+                
+                initial_stop_loss = round(stop_loss_price, self.price_precision)
+
+                # Розрахунок Take Profit
+                risk_per_trade = abs(entry_price - initial_stop_loss)
+                reward_per_trade = risk_per_trade * rr_ratio
+
+                if side == SIDE_BUY:
+                    take_profit_price = entry_price + reward_per_trade
+                else:
+                    take_profit_price = entry_price - reward_per_trade
+                
+                take_profit_price = round(take_profit_price, self.price_precision)
+
             self.orchestrator.pending_sl_tp[client_order_id] = {
                 'signal_type': signal['signal_type'],
                 'strategy_id': self.strategy_id,
                 'quantity': quantity,
                 'atr': signal.get('atr'),  # Зберігаємо ATR
-                'dataframe': signal.get('dataframe') # Зберігаємо dataframe
+                'dataframe': signal.get('dataframe'), # Зберігаємо dataframe
+                'stop_loss_price': initial_stop_loss, # Зберігаємо розрахований SL
+                'take_profit_price': take_profit_price # Зберігаємо розрахований TP
             }
+
+            # Зберігаємо позицію в PositionManager з розрахованими SL/TP
+            self.position_manager.set_position(
+                symbol=self.symbol,
+                side=signal['signal_type'], # 'Long' або 'Short'
+                quantity=quantity,
+                entry_price=entry_price,
+                stop_loss=initial_stop_loss,
+                take_profit=take_profit_price,
+                initial_stop_loss=initial_stop_loss # Початковий SL
+            )
 
             order_params = {
                 "symbol": self.symbol, "side": side, "type": order_type, 

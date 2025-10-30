@@ -6,3 +6,7 @@ gemini
 
 export GOOGLE_CLOUD_PROJECT="scalp-475021"
 gemini
+
+
+export GOOGLE_CLOUD_PROJECT="smdgemini99"
+gemini
