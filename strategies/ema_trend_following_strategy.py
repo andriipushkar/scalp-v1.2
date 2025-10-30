@@ -85,7 +85,7 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         if self.use_rsi_filter and f'RSI_{self.rsi_period}' not in df.columns:
             df.ta.rsi(length=self.rsi_period, append=True, col_names=(f'RSI_{self.rsi_period}',))
         if self.use_volume_filter and f'VOLUME_MA_{self.volume_ma_period}' not in df.columns:
-            df.ta.sma(close=df['Volume'], length=self.volume_ma_period, append=True,
+            df.ta.sma(close=df['volume'], length=self.volume_ma_period, append=True,
                       col_names=(f'VOLUME_MA_{self.volume_ma_period}',))
         if f'ATR_{self.atr_period}' not in df.columns:
             df.ta.atr(length=self.atr_period, append=True, col_names=(f'ATR_{self.atr_period}',))
@@ -118,7 +118,7 @@ class EmaTrendFollowingStrategy(BaseStrategy):
                           current_candle[f'EMA_{self.slow_ema_period}'] > prev_candle[f'EMA_{self.slow_ema_period}']
 
         is_momentum_strong = not self.use_rsi_filter or current_candle[f'RSI_{self.rsi_period}'] > 50
-        is_volume_confirmed = not self.use_volume_filter or current_candle['Volume'] >= current_candle[
+        is_volume_confirmed = not self.use_volume_filter or current_candle['volume'] >= current_candle[
             f'VOLUME_MA_{self.volume_ma_period}']
 
         if is_golden_cross and is_upward_slope and is_momentum_strong and is_volume_confirmed:
@@ -130,9 +130,11 @@ class EmaTrendFollowingStrategy(BaseStrategy):
                 pullback_upper_bound = pullback_ema * (1 + self.pullback_tolerance_pct)
 
                 # Визначаємо, яку частину свічки перевіряти
-                price_to_check = current_candle['Close']
+                price_to_check = current_candle['Close']  # Default
                 if self.pullback_candle_part == 'low':
                     price_to_check = current_candle['Low']
+                elif self.pullback_candle_part == 'high':
+                    price_to_check = current_candle['High']
 
                 # Перевірка відкату: для Long очікуємо, що ціна (low або close) торкнеться EMA
                 if not (pullback_lower_bound <= price_to_check <= pullback_upper_bound):
@@ -171,9 +173,11 @@ class EmaTrendFollowingStrategy(BaseStrategy):
                 pullback_upper_bound = pullback_ema * (1 + self.pullback_tolerance_pct)
 
                 # Визначаємо, яку частину свічки перевіряти
-                price_to_check = current_candle['Close']
+                price_to_check = current_candle['Close']  # Default
                 if self.pullback_candle_part == 'high':
                     price_to_check = current_candle['High']
+                elif self.pullback_candle_part == 'low':
+                    price_to_check = current_candle['Low']
 
                 # Перевірка відкату: для Short очікуємо, що ціна (high або close) торкнеться EMA
                 if not (pullback_lower_bound <= price_to_check <= pullback_upper_bound):
