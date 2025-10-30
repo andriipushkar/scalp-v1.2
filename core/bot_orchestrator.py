@@ -197,7 +197,7 @@ class BotOrchestrator:
                 logger.info(f"[{symbol}] Виставлення ордерів SL ({sl_price}) та TP ({tp_price}).")
                 sl_order = await self.binance_client.create_stop_market_order(symbol, sl_tp_side, quantity, sl_price, executor.price_precision, executor.qty_precision)
                 tp_order = await self.binance_client.create_take_profit_market_order(symbol, sl_tp_side, quantity, tp_price, executor.price_precision, executor.qty_precision)
-                self.position_manager.set_position(symbol, signal_type, quantity, actual_entry_price, sl_price, tp_price, sl_order['orderId'], tp_order['orderId'])
+                self.position_manager.set_position(symbol, signal_type, quantity, actual_entry_price, sl_price, tp_price, sl_price, sl_order['orderId'], tp_order['orderId'])
                 logger.success(f"[{symbol}] Позицію успішно відкрито з SL {sl_order['orderId']} та TP {tp_order['orderId']}.")
             except Exception as e:
                 logger.error(f"[{symbol}] Не вдалося виставити SL/TP. Запуск відкату позиції. Помилка: {e}")
@@ -240,46 +240,50 @@ class BotOrchestrator:
         Періодично отримує K-лінії для всіх активних символів та кешує їх.
         """
         logger.info("Запуск задачі періодичного отримання K-ліній...")
-        # Збираємо унікальні пари (символ, інтервал) для запитів
-        kline_requests = {} # {(symbol, interval): kline_limit}
-        for executor in self.trade_executors:
-            symbol = executor.strategy.symbol
-            interval = executor.strategy.kline_interval
-            limit = executor.strategy.kline_limit
-            kline_requests[(symbol, interval)] = max(kline_requests.get((symbol, interval), 0), limit)
-
         while True:
             start_time = asyncio.get_event_loop().time()
-            
+
+            # Збираємо унікальні пари (символ, інтервал) для запитів
+            kline_requests = {}  # {(symbol, interval): kline_limit}
+            for executor in self.trade_executors:
+                symbol = executor.strategy.symbol
+                interval = executor.strategy.kline_interval
+                limit = executor.strategy.kline_limit
+                kline_requests[(symbol, interval)] = max(kline_requests.get((symbol, interval), 0), limit)
+
+            tasks = []
+            request_params = []
             for (symbol, interval), limit in kline_requests.items():
-                try:
-                    klines = await self.binance_client.client.futures_klines(symbol=symbol, interval=interval, limit=limit)
-                    if klines:
-                        df = pd.DataFrame(klines, columns=['open_time', 'open', 'high', 'low', 'close', 'volume', 'close_time',
-                                                           'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume',
-                                                           'taker_buy_quote_asset_volume', 'ignore'])
-                        for col in ['open', 'high', 'low', 'close', 'volume']:
-                            df[col] = pd.to_numeric(df[col])
-                        self.kline_data_cache[f"{symbol}_{interval}"] = df
-                        logger.debug(f"Оновлено K-лінії для {symbol} ({interval}).")
-                    else:
-                        logger.warning(f"Не отримано K-ліній для {symbol} ({interval}).")
-                except Exception as e:
-                    logger.error(f"Помилка отримання K-ліній для {symbol} ({interval}): {e}")
-                await asyncio.sleep(0.1) # Невелика затримка між запитами, щоб уникнути бан-ліміту
+                tasks.append(self.binance_client.client.futures_klines(symbol=symbol, interval=interval, limit=limit))
+                request_params.append((symbol, interval, limit))
+
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+
+            for i, result in enumerate(results):
+                symbol, interval, limit = request_params[i]
+                if isinstance(result, Exception):
+                    logger.error(f"Помилка отримання K-ліній для {symbol} ({interval}): {result}")
+                    continue
+
+                klines = result
+                if klines:
+                    df = pd.DataFrame(klines, columns=['open_time', 'open', 'high', 'low', 'close', 'volume', 'close_time',
+                                                       'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume',
+                                                       'taker_buy_quote_asset_volume', 'ignore'])
+                    for col in ['open', 'high', 'low', 'close', 'volume']:
+                        df[col] = pd.to_numeric(df[col])
+                    self.kline_data_cache[f"{symbol}_{interval}"] = df
+                    logger.debug(f"Оновлено K-лінії для {symbol} ({interval}).")
+                else:
+                    logger.warning(f"Не отримано K-ліній для {symbol} ({interval}).")
 
             # Розраховуємо час до наступного повного циклу
-            # Це спрощена логіка, яка не враховує точний час закриття свічок
-            # Для більш точного вирівнювання потрібно використовувати час закриття свічок
-            # і чекати до наступного закриття
             end_time = asyncio.get_event_loop().time()
             elapsed_time = end_time - start_time
-            
-            # Знаходимо найменший інтервал серед усіх стратегій, щоб чекати його
+
             min_interval_seconds = float('inf')
             for executor in self.trade_executors:
                 interval_str = executor.strategy.kline_interval
-                # Перетворюємо інтервал в секунди (напр., '1m' -> 60, '15m' -> 900)
                 if interval_str.endswith('m'):
                     seconds = int(interval_str[:-1]) * 60
                 elif interval_str.endswith('h'):
@@ -287,7 +291,7 @@ class BotOrchestrator:
                 elif interval_str.endswith('d'):
                     seconds = int(interval_str[:-1]) * 86400
                 else:
-                    seconds = 60 # За замовчуванням 1 хвилина
+                    seconds = 60  # За замовчуванням 1 хвилина
                 min_interval_seconds = min(min_interval_seconds, seconds)
 
             sleep_duration = max(0, min_interval_seconds - elapsed_time)

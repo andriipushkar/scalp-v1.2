@@ -58,7 +58,7 @@ class PositionManager:
         """Повертає кількість активних позицій."""
         return len(self._positions)
 
-    def set_position(self, symbol: str, side: str, quantity: float, entry_price: float, stop_loss: float, take_profit: float, sl_order_id: int | None = None, tp_order_id: int | None = None):
+    def set_position(self, symbol: str, side: str, quantity: float, entry_price: float, stop_loss: float, take_profit: float, initial_stop_loss: float, sl_order_id: int | None = None, tp_order_id: int | None = None):
         """
         Створює нову або оновлює існуючу позицію.
 
@@ -69,6 +69,7 @@ class PositionManager:
             entry_price (float): Ціна входу.
             stop_loss (float): Ціна Stop-Loss.
             take_profit (float): Ціна Take-Profit.
+            initial_stop_loss (float): Початкова ціна Stop-Loss.
             sl_order_id (int, optional): ID Stop-Loss ордеру на біржі.
             tp_order_id (int, optional): ID Take-Profit ордеру на біржі.
         """
@@ -82,6 +83,7 @@ class PositionManager:
                 "entry_price": entry_price,
                 "stop_loss": stop_loss,
                 "take_profit": take_profit,
+                "initial_stop_loss": initial_stop_loss,
                 "sl_order_id": sl_order_id,
                 "tp_order_id": tp_order_id
             }

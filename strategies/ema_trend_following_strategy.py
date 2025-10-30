@@ -44,6 +44,7 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         self.pullback_tolerance_pct = self.params.get('pullback_tolerance_pct', 0.001)  # 0.1%
         # 'close', 'low' (для Long), 'high' (для Short)
         self.pullback_candle_part = self.params.get('pullback_candle_part', 'close')
+        self.use_breakeven_sl = self.params.get('use_breakeven_sl', False)
 
         self.kline_limit = max(self.slow_ema_period, self.atr_period,
                                self.adx_period) + 5  # Беремо трохи більше даних для розрахунків
@@ -136,11 +137,11 @@ class EmaTrendFollowingStrategy(BaseStrategy):
                 elif self.pullback_candle_part == 'high':
                     price_to_check = current_candle['High']
 
-                # Перевірка відкату: для Long очікуємо, що ціна (low або close) торкнеться EMA
-                if not (pullback_lower_bound <= price_to_check <= pullback_upper_bound):
+                # Перевірка відкату: для Long очікуємо, що ціна (low або close) торкнеться EMA і свічка закриється вище ціни відкриття
+                if not (pullback_lower_bound <= price_to_check <= pullback_upper_bound and current_candle['Close'] > current_candle['Open']):
                     logger.debug(
                         f"[{self.strategy_id}] Long сигнал відхилено: ціна не на відкаті до {self.pullback_ema_type.upper()} EMA "
-                        f"(перевірка по {self.pullback_candle_part}, ціна: {price_to_check:.4f}, діапазон: {pullback_lower_bound:.4f}-{pullback_upper_bound:.4f}).")
+                        f"(перевірка по {self.pullback_candle_part}, ціна: {price_to_check:.4f}, діапазон: {pullback_lower_bound:.4f}-{pullback_upper_bound:.4f}, закриття: {current_candle['Close']:.4f}, відкриття: {current_candle['Open']:.4f}).")
                     return None
 
             logger.info(
@@ -179,11 +180,11 @@ class EmaTrendFollowingStrategy(BaseStrategy):
                 elif self.pullback_candle_part == 'low':
                     price_to_check = current_candle['Low']
 
-                # Перевірка відкату: для Short очікуємо, що ціна (high або close) торкнеться EMA
-                if not (pullback_lower_bound <= price_to_check <= pullback_upper_bound):
+                # Перевірка відкату: для Short очікуємо, що ціна (high або close) торкнеться EMA і свічка закриється нижче ціни відкриття
+                if not (pullback_lower_bound <= price_to_check <= pullback_upper_bound and current_candle['Close'] < current_candle['Open']):
                     logger.debug(
                         f"[{self.strategy_id}] Short сигнал відхилено: ціна не на відкаті до {self.pullback_ema_type.upper()} EMA "
-                        f"(перевірка по {self.pullback_candle_part}, ціна: {price_to_check:.4f}, діапазон: {pullback_lower_bound:.4f}-{pullback_upper_bound:.4f}).")
+                        f"(перевірка по {self.pullback_candle_part}, ціна: {price_to_check:.4f}, діапазон: {pullback_lower_bound:.4f}-{pullback_upper_bound:.4f}, закриття: {current_candle['Close']:.4f}, відкриття: {current_candle['Open']:.4f}).")
                     return None
 
             logger.info(
@@ -313,16 +314,36 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         current_atr = df.iloc[-1][f'ATR_{self.atr_period}']
         new_stop_loss = current_sl
 
+        # --- Логіка переведення в беззбиток (Breakeven SL) ---
+        if self.use_breakeven_sl:
+            initial_risk_amount = abs(entry_price - position['initial_stop_loss'])
+            if initial_risk_amount > 0: # Уникаємо ділення на нуль
+                if signal_type == 'Long':
+                    # Якщо поточна ціна пройшла 1:1 R:R від початкового ризику
+                    if current_price >= entry_price + initial_risk_amount:
+                        # І поточний SL вище ціни входу, або ще не пересунутий на ціну входу
+                        if current_sl < entry_price:
+                            new_stop_loss = entry_price
+                            logger.info(f"[{self.strategy_id}] Long: SL пересунуто в беззбиток ({entry_price:.4f}).")
+                elif signal_type == 'Short':
+                    # Якщо поточна ціна пройшла 1:1 R:R від початкового ризику
+                    if current_price <= entry_price - initial_risk_amount:
+                        # І поточний SL нижче ціни входу, або ще не пересунутий на ціну входу
+                        if current_sl > entry_price:
+                            new_stop_loss = entry_price
+                            logger.info(f"[{self.strategy_id}] Short: SL пересунуто в беззбиток ({entry_price:.4f}).")
+
+        # --- Логіка трейлінг-стопу ---
         if signal_type == 'Long':
             # Для Long позиції SL повинен рухатись тільки вгору
             potential_new_sl = current_price - (self.sl_atr_multiplier * current_atr)
-            if potential_new_sl > current_sl:
+            if potential_new_sl > new_stop_loss: # Порівнюємо з new_stop_loss, який міг бути оновлений до беззбитку
                 new_stop_loss = potential_new_sl
                 logger.info(f"[{self.strategy_id}] Long: SL оновлено з {current_sl:.4f} на {new_stop_loss:.4f} (поточна ціна: {current_price:.4f}, ATR: {current_atr:.4f})")
         elif signal_type == 'Short':
             # Для Short позиції SL повинен рухатись тільки вниз
             potential_new_sl = current_price + (self.sl_atr_multiplier * current_atr)
-            if potential_new_sl < current_sl:
+            if potential_new_sl < new_stop_loss: # Порівнюємо з new_stop_loss, який міг бути оновлений до беззбитку
                 new_stop_loss = potential_new_sl
                 logger.info(f"[{self.strategy_id}] Short: SL оновлено з {current_sl:.4f} на {new_stop_loss:.4f} (поточна ціна: {current_price:.4f}, ATR: {current_atr:.4f})")
 
