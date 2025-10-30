@@ -40,27 +40,35 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         self.use_adx_filter = self.params.get('use_adx_filter', True)
 
         self.use_pullback_entry = self.params.get('use_pullback_entry', False)
-        self.pullback_ema_type = self.params.get('pullback_ema_type', 'fast') # 'fast' or 'slow'
-        self.pullback_tolerance_pct = self.params.get('pullback_tolerance_pct', 0.001) # 0.1%
+        self.pullback_ema_type = self.params.get('pullback_ema_type', 'fast')  # 'fast' or 'slow'
+        self.pullback_tolerance_pct = self.params.get('pullback_tolerance_pct', 0.001)  # 0.1%
+        # 'close', 'low' (для Long), 'high' (для Short)
+        self.pullback_candle_part = self.params.get('pullback_candle_part', 'close')
 
-        self.kline_limit = max(self.slow_ema_period, self.atr_period, self.adx_period) + 5 # Беремо трохи більше даних для розрахунків
+        self.kline_limit = max(self.slow_ema_period, self.atr_period,
+                               self.adx_period) + 5  # Беремо трохи більше даних для розрахунків
 
-        logger.info(f"[{self.strategy_id}] Ініціалізовано EmaTrendFollowingStrategy з параметрами: {self.params}")
+        logger.info(
+            f"[{self.strategy_id}] Ініціалізовано EmaTrendFollowingStrategy з параметрами: {self.params}")
 
-    async def check_signal(self, order_book_manager: 'OrderBookManager', binance_client: 'BinanceClient', dataframe: pd.DataFrame | None = None) -> dict | None:
+    async def check_signal(self, order_book_manager: 'OrderBookManager', binance_client: 'BinanceClient',
+                           dataframe: pd.DataFrame | None = None) -> dict | None:
         """
         Перевіряє наявність торгового сигналу на основі аналізу K-ліній.
         """
         if dataframe is not None:
-            df = dataframe.copy() # Створюємо копію, щоб уникнути SettingWithCopyWarning
+            df = dataframe.copy()  # Створюємо копію, щоб уникнути SettingWithCopyWarning
         else:
-            klines = await binance_client.client.futures_klines(symbol=self.symbol, interval=self.kline_interval, limit=self.kline_limit)
+            klines = await binance_client.client.futures_klines(symbol=self.symbol, interval=self.kline_interval,
+                                                                limit=self.kline_limit)
             if klines.empty or len(klines) < self.kline_limit:
-                logger.warning(f"[{self.strategy_id}] Недостатньо даних K-ліній для аналізу ({len(klines)} з {self.kline_limit} потрібних).")
+                logger.warning(
+                    f"[{self.strategy_id}] Недостатньо даних K-ліній для аналізу ({len(klines)} з {self.kline_limit} потрібних).")
                 return None
 
             df = pd.DataFrame(klines, columns=['open_time', 'Open', 'High', 'Low', 'Close', 'Volume', 'close_time',
-                                               'quote_asset_volume', 'number_of_trades', 'taker_buy_base_asset_volume',
+                                               'quote_asset_volume', 'number_of_trades',
+                                               'taker_buy_base_asset_volume',
                                                'taker_buy_quote_asset_volume', 'ignore'])
 
         # Конвертуємо колонки у числовий тип
@@ -77,16 +85,19 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         if self.use_rsi_filter and f'RSI_{self.rsi_period}' not in df.columns:
             df.ta.rsi(length=self.rsi_period, append=True, col_names=(f'RSI_{self.rsi_period}',))
         if self.use_volume_filter and f'VOLUME_MA_{self.volume_ma_period}' not in df.columns:
-            df.ta.sma(close=df['volume'], length=self.volume_ma_period, append=True, col_names=(f'VOLUME_MA_{self.volume_ma_period}',))
+            df.ta.sma(close=df['Volume'], length=self.volume_ma_period, append=True,
+                      col_names=(f'VOLUME_MA_{self.volume_ma_period}',))
         if f'ATR_{self.atr_period}' not in df.columns:
             df.ta.atr(length=self.atr_period, append=True, col_names=(f'ATR_{self.atr_period}',))
         if self.use_adx_filter and f'ADX_{self.adx_period}' not in df.columns:
-            df.ta.adx(length=self.adx_period, append=True, col_names=(f'ADX_{self.adx_period}', f'DMP_{self.adx_period}', f'DMN_{self.adx_period}', f'ADXR_{self.adx_period}'))
+            df.ta.adx(length=self.adx_period, append=True,
+                      col_names=(f'ADX_{self.adx_period}', f'DMP_{self.adx_period}', f'DMN_{self.adx_period}',
+                                 f'ADXR_{self.adx_period}'))
 
         # Видаляємо рядки з NaN після розрахунку індикаторів
         df.dropna(inplace=True)
         if len(df) < 2:
-            return None # Потрібно мінімум 2 рядки для порівняння
+            return None  # Потрібно мінімум 2 рядки для порівняння
 
         # Поточна (закрита) та попередня свічки
         current_candle = df.iloc[-1]
@@ -95,7 +106,8 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         # --- Фільтр ADX ---
         is_adx_trending = not self.use_adx_filter or current_candle[f'ADX_{self.adx_period}'] > self.adx_threshold
         if not is_adx_trending:
-            logger.debug(f"[{self.strategy_id}] Сигнал відхилено через низький ADX ({current_candle[f'ADX_{self.adx_period}']:.2f} < {self.adx_threshold}).")
+            logger.debug(
+                f"[{self.strategy_id}] Сигнал відхилено через низький ADX ({current_candle[f'ADX_{self.adx_period}']:.2f} < {self.adx_threshold}).")
             return None
 
         # --- Умови для Long ---
@@ -106,23 +118,34 @@ class EmaTrendFollowingStrategy(BaseStrategy):
                           current_candle[f'EMA_{self.slow_ema_period}'] > prev_candle[f'EMA_{self.slow_ema_period}']
 
         is_momentum_strong = not self.use_rsi_filter or current_candle[f'RSI_{self.rsi_period}'] > 50
-        is_volume_confirmed = not self.use_volume_filter or current_candle['volume'] >= current_candle[f'VOLUME_MA_{self.volume_ma_period}']
+        is_volume_confirmed = not self.use_volume_filter or current_candle['Volume'] >= current_candle[
+            f'VOLUME_MA_{self.volume_ma_period}']
 
         if is_golden_cross and is_upward_slope and is_momentum_strong and is_volume_confirmed:
             if self.use_pullback_entry:
-                pullback_ema = current_candle[f'EMA_{self.fast_ema_period}'] if self.pullback_ema_type == 'fast' else current_candle[f'EMA_{self.slow_ema_period}']
+                pullback_ema = current_candle[
+                    f'EMA_{self.fast_ema_period}'] if self.pullback_ema_type == 'fast' else current_candle[
+                    f'EMA_{self.slow_ema_period}']
                 pullback_lower_bound = pullback_ema * (1 - self.pullback_tolerance_pct)
                 pullback_upper_bound = pullback_ema * (1 + self.pullback_tolerance_pct)
-                
-                # Check if current price is within pullback range of the EMA
-                if not (pullback_lower_bound <= current_candle['close'] <= pullback_upper_bound):
-                    logger.debug(f"[{self.strategy_id}] Long сигнал відхилено: ціна не на відкаті до {self.pullback_ema_type.upper()} EMA.")
+
+                # Визначаємо, яку частину свічки перевіряти
+                price_to_check = current_candle['Close']
+                if self.pullback_candle_part == 'low':
+                    price_to_check = current_candle['Low']
+
+                # Перевірка відкату: для Long очікуємо, що ціна (low або close) торкнеться EMA
+                if not (pullback_lower_bound <= price_to_check <= pullback_upper_bound):
+                    logger.debug(
+                        f"[{self.strategy_id}] Long сигнал відхилено: ціна не на відкаті до {self.pullback_ema_type.upper()} EMA "
+                        f"(перевірка по {self.pullback_candle_part}, ціна: {price_to_check:.4f}, діапазон: {pullback_lower_bound:.4f}-{pullback_upper_bound:.4f}).")
                     return None
 
-            logger.info(f"[{self.strategy_id}] Знайдено сигнал LONG для {self.symbol} по ціні {current_candle['close']:.4f}")
+            logger.info(
+                f"[{self.strategy_id}] Знайдено сигнал LONG для {self.symbol} по ціні {current_candle['Close']:.4f}")
             return {
                 'signal_type': 'Long',
-                'entry_price': current_candle['close'],
+                'entry_price': current_candle['Close'],
                 'atr': current_candle[f'ATR_{self.atr_period}'],
                 'dataframe': df
             }
@@ -131,26 +154,39 @@ class EmaTrendFollowingStrategy(BaseStrategy):
         is_death_cross = prev_candle[f'EMA_{self.fast_ema_period}'] > prev_candle[f'EMA_{self.slow_ema_period}'] and \
                          current_candle[f'EMA_{self.fast_ema_period}'] < current_candle[f'EMA_{self.slow_ema_period}']
 
-        is_downward_slope = current_candle[f'EMA_{self.fast_ema_period}'] < prev_candle[f'EMA_{self.fast_ema_period}'] and \
-                            current_candle[f'EMA_{self.slow_ema_period}'] < prev_candle[f'EMA_{self.slow_ema_period}']
+        is_downward_slope = current_candle[f'EMA_{self.fast_ema_period}'] < prev_candle[
+            f'EMA_{self.fast_ema_period}'] and \
+                            current_candle[f'EMA_{self.slow_ema_period}'] < prev_candle[
+                                f'EMA_{self.slow_ema_period}']
 
         is_momentum_weak = not self.use_rsi_filter or current_candle[f'RSI_{self.rsi_period}'] < 50
 
-        if is_death_cross and is_downward_slope and is_momentum_weak and (not self.use_volume_filter or is_volume_confirmed):
+        if is_death_cross and is_downward_slope and is_momentum_weak and (
+                not self.use_volume_filter or is_volume_confirmed):
             if self.use_pullback_entry:
-                pullback_ema = current_candle[f'EMA_{self.fast_ema_period}'] if self.pullback_ema_type == 'fast' else current_candle[f'EMA_{self.slow_ema_period}']
+                pullback_ema = current_candle[
+                    f'EMA_{self.fast_ema_period}'] if self.pullback_ema_type == 'fast' else current_candle[
+                    f'EMA_{self.slow_ema_period}']
                 pullback_lower_bound = pullback_ema * (1 - self.pullback_tolerance_pct)
                 pullback_upper_bound = pullback_ema * (1 + self.pullback_tolerance_pct)
 
-                # Check if current price is within pullback range of the EMA
-                if not (pullback_lower_bound <= current_candle['close'] <= pullback_upper_bound):
-                    logger.debug(f"[{self.strategy_id}] Short сигнал відхилено: ціна не на відкаті до {self.pullback_ema_type.upper()} EMA.")
+                # Визначаємо, яку частину свічки перевіряти
+                price_to_check = current_candle['Close']
+                if self.pullback_candle_part == 'high':
+                    price_to_check = current_candle['High']
+
+                # Перевірка відкату: для Short очікуємо, що ціна (high або close) торкнеться EMA
+                if not (pullback_lower_bound <= price_to_check <= pullback_upper_bound):
+                    logger.debug(
+                        f"[{self.strategy_id}] Short сигнал відхилено: ціна не на відкаті до {self.pullback_ema_type.upper()} EMA "
+                        f"(перевірка по {self.pullback_candle_part}, ціна: {price_to_check:.4f}, діапазон: {pullback_lower_bound:.4f}-{pullback_upper_bound:.4f}).")
                     return None
 
-            logger.info(f"[{self.strategy_id}] Знайдено сигнал SHORT для {self.symbol} по ціні {current_candle['close']:.4f}")
+            logger.info(
+                f"[{self.strategy_id}] Знайдено сигнал SHORT для {self.symbol} по ціні {current_candle['Close']:.4f}")
             return {
                 'signal_type': 'Short',
-                'entry_price': current_candle['close'],
+                'entry_price': current_candle['Close'],
                 'atr': current_candle[f'ATR_{self.atr_period}'],
                 'dataframe': df
             }
